@@ -1,12 +1,19 @@
 # MASTER PLAN - KI-Automatisierung
 
-## KRITISCHER PFAD ZU ERSTEN EINNAHMEN
+## CONSTRAINTS (WICHTIG)
+- Thomas ist angestellt (Konkurrenzklausel)
+- Kein öffentliches Auftreten als Geschäftsführer möglich
+- Keine LinkedIn unter echtem Namen
+- Business muss anonym/pseudonym laufen
 
-### Woche 1 - Quick Wins (50€ Investment max)
-1. Website online (irgendwie - Hauptsache erreichbar)
-2. Email: info@irgendwas.de (notfalls Gmail)
-3. Outreach starten: 10 Messages/Tag
-4. **Ziel: 2 Calls buchen**
+## NEUE STRATEGIE: Anonymes B2B Service Business
+
+### Woche 1 - Foundation (100€ Investment max)
+1. ✅ Website online (anonym, kein Name)
+2. Professional Email Setup
+3. Virtuelle Identität/Firmennamen etablieren
+4. Cold Email Outreach (kein LinkedIn nötig)
+5. **Ziel: 5 Responses, 1-2 Calls buchen**
 
 ### Woche 2 - First Revenue
 1. Calls durchführen
