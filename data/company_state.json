@@ -20,7 +20,7 @@
   "products": {
     "slack_bot": {
       "name": "TaskMaster Slack Bot",
-      "status": "live",
+      "status": "deployed",
       "phase": "validate",
       "customers": 0,
       "mrr": 0.0,
