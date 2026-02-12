@@ -41,7 +41,7 @@ DEFAULT_STATE = {
     },
     "financials": {
         "starting_capital": 10000.00,
-        "current_capital": 9607.45,  # 10000 - 390 (Copilot) - 2.55 (domain)
+        "current_capital": 9602.42,  # 10000 - 390 (Copilot) - 2.55 (domain) - 5.03 (Anthropic API)
         "monthly_costs": {
             "copilot_pro": 32.50,
             "infrastructure": 0.00,
