@@ -31,6 +31,7 @@ from core.llm import LLM
 from core.state import load_state, save_state, get_status_report, log_decision
 from agents.ceo_agent import CEOAgent
 from agents.cto_agent import CTOAgent
+from agents.builder_agent import BuilderAgent
 
 # Configure logging
 logging.basicConfig(
@@ -83,6 +84,7 @@ def run_cycle():
     agents = [
         CEOAgent(llm=llm),
         CTOAgent(llm=llm),
+        BuilderAgent(llm=llm),
     ]
 
     for agent in agents:
