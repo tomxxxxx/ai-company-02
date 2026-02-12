@@ -136,6 +136,41 @@ class AutonomousRunner:
                 logger.warning(f"Stopping iteration due to layer failure: {layer.name}")
                 break
 
+        # Process evaluation recommendation (if evaluation layer completed)
+        if "evaluation" in state.layer_outputs and not state.blocked:
+            evaluation_output = state.layer_outputs["evaluation"].get("output", "")
+            recommendation = self._parse_evaluation_recommendation(evaluation_output)
+            
+            logger.info(f"Evaluation recommendation: {recommendation['action'].upper()}")
+            
+            if recommendation["action"] == "commit":
+                try:
+                    # Create meaningful commit message
+                    commit_message = f"Iteration #{iteration_id}: {recommendation['reason']}"
+                    git_tool = next((tool for tool in self.tools if isinstance(tool, GitCommitTool)), None)
+                    if git_tool:
+                        git_result = git_tool.execute({"message": commit_message})
+                        logger.info(f"Auto-committed iteration results: {git_result.get('result', 'Success')}")
+                        state.recommendation_processed = True
+                        state.commit_message = commit_message
+                    else:
+                        logger.warning("GitCommitTool not available for auto-commit")
+                except Exception as e:
+                    logger.error(f"Auto-commit failed: {e}")
+                    
+            elif recommendation["action"] == "revert":
+                logger.warning(f"REVERT recommended but not implemented yet: {recommendation['reason']}")
+                # TODO: Implement git revert functionality when needed
+                
+            elif recommendation["action"] == "continue":
+                logger.info(f"Continue recommended: {recommendation['reason']}")
+                
+            else:
+                logger.warning(f"Unknown recommendation: {recommendation}")
+                
+            # Store recommendation in state for tracking
+            state.evaluation_recommendation = recommendation
+
         # Finalize iteration
         state.completed_at = datetime.now(timezone.utc).isoformat()
         state.save()
@@ -151,6 +186,46 @@ class AutonomousRunner:
         logger.info(f"{'='*70}\n")
 
         return state
+
+    def _parse_evaluation_recommendation(self, evaluation_output: str) -> dict:
+        """
+        Parse the evaluation output for COMMIT/REVERT/CONTINUE recommendation.
+        
+        Returns:
+            dict: {"action": "commit|revert|continue|unknown", "reason": "..."}
+        """
+        if not evaluation_output:
+            return {"action": "unknown", "reason": "No evaluation output"}
+            
+        output_lower = evaluation_output.lower()
+        
+        # Look for the specific format: **EMPFEHLUNG: ACTION**
+        if "**empfehlung: commit**" in output_lower:
+            # Extract reason (text after the recommendation line)
+            lines = evaluation_output.split('\n')
+            for i, line in enumerate(lines):
+                if "**empfehlung: commit**" in line.lower():
+                    reason = line.split('**empfehlung: commit**')[1].strip(' -')
+                    return {"action": "commit", "reason": reason or "Evaluation recommended commit"}
+            return {"action": "commit", "reason": "Evaluation recommended commit"}
+            
+        elif "**empfehlung: revert**" in output_lower:
+            lines = evaluation_output.split('\n')
+            for i, line in enumerate(lines):
+                if "**empfehlung: revert**" in line.lower():
+                    reason = line.split('**empfehlung: revert**')[1].strip(' -')
+                    return {"action": "revert", "reason": reason or "Evaluation recommended revert"}
+            return {"action": "revert", "reason": "Evaluation recommended revert"}
+            
+        elif "**empfehlung: continue**" in output_lower:
+            lines = evaluation_output.split('\n')
+            for i, line in enumerate(lines):
+                if "**empfehlung: continue**" in line.lower():
+                    reason = line.split('**empfehlung: continue**')[1].strip(' -')
+                    return {"action": "continue", "reason": reason or "Evaluation recommended continue"}
+            return {"action": "continue", "reason": "Evaluation recommended continue"}
+        
+        return {"action": "unknown", "reason": "No clear recommendation found"}
 
     def _write_human_action_needed(self, state: IterationState):
         """Write HUMAN_ACTION_NEEDED.md with current Thomas tasks."""

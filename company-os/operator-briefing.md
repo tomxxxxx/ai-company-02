@@ -26,6 +26,26 @@ Iterationen dürfen kleine Schritte sein. "Legacy aufräumen", "eine Datei verbe
 
 2. **Iteration #2**: Leitebene besser (6 Turns). ABER: wieder bei Planungsebene blockiert — nie zur Ausführung gekommen. Das System hat externe API-Abhängigkeiten eingeplant die nicht existieren (SendGrid, Mixpanel) und sich mit einem Blocking-Task selbst blockiert. Iterationen MÜSSEN die Ausführungsebene erreichen.
 
+### [2026-02-13] Feedback aus Iteration #3
+
+**Das war die erste Iteration, die alle 6 Ebenen durchlaufen hat — ein Durchbruch!**
+
+Positiv:
+- Leitebene hat die ideas-backlog sauber gepflegt und sich auf ihre Rolle beschränkt.
+- Strategieebene hat eine realistische, kleine Aufgabe gewählt (Legacy-Cleanup) — genau richtig.
+- Planungsebene hat konkrete, machbare Tasks formuliert, keine externen Abhängigkeiten.
+- Ausführungsebene hat autonom 15+ Legacy-Dateien identifiziert und gelöscht.
+- Das System hat bewiesen, dass es eigenständig sinnvolle Arbeit leisten kann.
+
+Verbesserungspotential:
+- Die Evaluationsebene war noch oberflächlich — soll künftig konkreter bewerten und Commit/Revert empfehlen (siehe nächster Eintrag).
+
+Insgesamt: Iteration #3 ist der Beweis, dass die Architektur funktioniert. Weiter so!
+
+### [2026-02-13] Iteration #4 — Externer Abbruch, kein Systemfehler
+
+Iteration #4 wurde nach der Leitebene abgebrochen, weil das Anthropic API-Guthaben aufgebraucht war. Das ist **kein Fehler im System** — die Leitebene hat korrekt gearbeitet und den Backlog sinnvoll aktualisiert. Das Guthaben wurde nachgeladen und Auto-Reload aktiviert. Keine Fehlersuche nötig, einfach weiterarbeiten.
+
 ### [2026-02-12] Thomas' persönliche Kontakte
 
 Thomas' private Kontakte werden NICHT für Business genutzt.

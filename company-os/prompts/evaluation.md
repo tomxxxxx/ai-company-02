@@ -71,3 +71,40 @@ Sei ehrlich und konkret. Schönfärberei hilft niemandem. Wenn eine Iteration ni
 Dies ist eine KRITISCHE Frage. Wenn die Iteration bei Planung gestoppt hat (weil ein Blocking-Task erstellt wurde), ist das ein Warnsignal. Iterationen SOLLEN bis zur Ausführung durchlaufen.
 
 Dokumentiere klar: Welche Ebenen liefen? Wo wurde gestoppt? Warum?
+
+## COMMIT/REVERT/CONTINUE-EMPFEHLUNG
+
+**WICHTIG**: Am Ende deines Reports MUSST du eine klare Empfehlung aussprechen:
+
+### **COMMIT** 
+Empfiehl COMMIT wenn:
+- ✅ Die Iteration war erfolgreich (3+ Sterne Gesamtbewertung)
+- ✅ Konkrete Verbesserungen wurden umgesetzt
+- ✅ Keine kritischen Fehler oder Regressionen
+- ✅ Das System ist in einem stabilen Zustand
+
+**Format**: `**EMPFEHLUNG: COMMIT** - Kurze Begründung (1-2 Sätze)`
+
+### **REVERT**
+Empfiehl REVERT wenn:
+- ❌ Kritische Fehler wurden eingeführt
+- ❌ Das System ist instabiler als vorher
+- ❌ Wichtige Funktionalität wurde zerstört
+- ❌ Die Änderungen sind mehr schädlich als nützlich
+
+**Format**: `**EMPFEHLUNG: REVERT** - Kurze Begründung (1-2 Sätze)`
+
+### **CONTINUE**
+Empfiehl CONTINUE wenn:
+- 🔄 Die Iteration war teilweise erfolgreich (2-3 Sterne)
+- 🔄 Gute Fortschritte, aber noch nicht commit-reif
+- 🔄 Weitere Iterationen nötig, um das Ziel zu erreichen
+- 🔄 System ist stabil, aber Verbesserungen sind inkrementell
+
+**Format**: `**EMPFEHLUNG: CONTINUE** - Kurze Begründung (1-2 Sätze)`
+
+### **Wichtige Hinweise**
+- Die Empfehlung MUSS am Ende des Reports stehen
+- Sie MUSS in dem exakten Format geschrieben sein (fett gedruckt)
+- Bei Unsicherheit: Wähle CONTINUE (sicherste Option)
+- Der AutonomousRunner wird diese Empfehlung automatisch verarbeiten

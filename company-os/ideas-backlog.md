@@ -21,11 +21,11 @@ Jede Idee hat:
 
 ## Aktive Ideen
 
-### [system | hoch | 2026-02-12] Blocking-Problem lösen
-Kritisch: System plant immer externe API-Abhängigkeiten ein, die Thomas-Tasks erzeugen und Iterationen blockieren. Muss lernen, ohne externe Dependencies zu arbeiten und trotzdem Fortschritte zu machen.
+### [system | hoch | 2026-02-13] Core-Module Legacy-Analyse fortsetzen
+Iteration #3 wurde bei der Core-Module-Analyse unterbrochen. Identifizieren welche Module in core/ und agents/ noch aktiv genutzt werden vs. Legacy-Code der entfernt werden kann.
 
-### [system | hoch | 2026-02-12] Legacy-Code aufräumen
-Alte Dateien im Root (30DAY_EXECUTION_PLAN.md, business-playbook.md, etc.) und Legacy-Module (agents/, core/orchestrator.py) sind veraltet und verwirrend für das System. Aufräumen verbessert die Effizienz aller Ebenen.
+### [system | hoch | 2026-02-13] Evaluations-Prompt erweitern
+Thomas' neues Requirement: Evaluationsebene soll Commit/Revert/Continue-Empfehlungen aussprechen. Prompt anpassen und ggf. Runner erweitern für automatisierte Qualitätskontrolle.
 
 ### [system | hoch | 2026-02-12] Dokumentation konsolidieren
 company_state.json enthält veraltete Felder. ONBOARDING.md wurde gestrafft aber referenziert noch alte Strukturen. Saubere Dokumentation = bessere Iterationen.
