@@ -11,6 +11,8 @@ class Config:
     SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
     SLACK_APP_TOKEN = os.environ.get("SLACK_APP_TOKEN", "")
     SLACK_SIGNING_SECRET = os.environ.get("SLACK_SIGNING_SECRET", "")
+    SLACK_CLIENT_ID = os.environ.get("SLACK_CLIENT_ID", "")
+    SLACK_CLIENT_SECRET = os.environ.get("SLACK_CLIENT_SECRET", "")
 
     # Database
     DATABASE_PATH = os.environ.get("DATABASE_PATH", "taskmaster.db")
@@ -31,12 +33,18 @@ class Config:
     def validate(cls):
         """Validate that all required env vars are present."""
         missing = []
-        if not cls.SLACK_BOT_TOKEN:
-            missing.append("SLACK_BOT_TOKEN")
-        if cls.USE_SOCKET_MODE and not cls.SLACK_APP_TOKEN:
-            missing.append("SLACK_APP_TOKEN")
-        if not cls.USE_SOCKET_MODE and not cls.SLACK_SIGNING_SECRET:
-            missing.append("SLACK_SIGNING_SECRET")
+        if cls.USE_SOCKET_MODE:
+            if not cls.SLACK_BOT_TOKEN:
+                missing.append("SLACK_BOT_TOKEN")
+            if not cls.SLACK_APP_TOKEN:
+                missing.append("SLACK_APP_TOKEN")
+        else:
+            if not cls.SLACK_SIGNING_SECRET:
+                missing.append("SLACK_SIGNING_SECRET")
+            if not cls.SLACK_CLIENT_ID:
+                missing.append("SLACK_CLIENT_ID")
+            if not cls.SLACK_CLIENT_SECRET:
+                missing.append("SLACK_CLIENT_SECRET")
         if missing:
             raise ValueError(
                 f"Missing required environment variables: {', '.join(missing)}"

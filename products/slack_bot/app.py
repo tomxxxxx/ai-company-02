@@ -6,14 +6,17 @@ HTTP Mode   (production):   gunicorn app:flask_app
 
 import os
 import logging
-from flask import Flask, request
+from flask import Flask, request, redirect
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_bolt.adapter.socket_mode import SocketModeHandler
+from slack_bolt.oauth.oauth_settings import OAuthSettings
+from slack_bolt.oauth import OAuthFlow
 
 from config import Config
 from database import init_db
 from slack_handlers import register_handlers
+from oauth_store import SQLiteInstallationStore, SQLiteOAuthStateStore
 
 # ── Logging ──────────────────────────────────────────────────
 logging.basicConfig(
@@ -25,14 +28,25 @@ logger = logging.getLogger(__name__)
 # ── Validate env ─────────────────────────────────────────────
 Config.validate()
 
-# ── Slack Bolt app ───────────────────────────────────────────
-if Config.USE_SOCKET_MODE:
-    slack_app = App(token=Config.SLACK_BOT_TOKEN)
-else:
-    slack_app = App(
-        token=Config.SLACK_BOT_TOKEN,
-        signing_secret=Config.SLACK_SIGNING_SECRET,
+# ── OAuth Setup ──────────────────────────────────────────────
+if not Config.USE_SOCKET_MODE:
+    installation_store = SQLiteInstallationStore()
+    oauth_state_store = SQLiteOAuthStateStore()
+    
+    oauth_settings = OAuthSettings(
+        client_id=Config.SLACK_CLIENT_ID,
+        client_secret=Config.SLACK_CLIENT_SECRET,
+        scopes=["commands", "chat:write", "app_mentions:read"],
+        installation_store=installation_store,
+        state_store=oauth_state_store,
     )
+    
+    slack_app = App(
+        signing_secret=Config.SLACK_SIGNING_SECRET,
+        oauth_settings=oauth_settings,
+    )
+else:
+    slack_app = App(token=Config.SLACK_BOT_TOKEN)
 
 # ── Database ─────────────────────────────────────────────────
 init_db()
@@ -48,6 +62,20 @@ handler = SlackRequestHandler(slack_app)
 @flask_app.route("/slack/events", methods=["POST"])
 def slack_events():
     return handler.handle(request)
+
+
+@flask_app.route("/slack/install", methods=["GET"])
+def install():
+    if Config.USE_SOCKET_MODE:
+        return {"error": "OAuth not available in Socket Mode"}, 400
+    return slack_app.oauth_flow.handle_installation(request)
+
+
+@flask_app.route("/slack/oauth_redirect", methods=["GET"])
+def oauth_redirect():
+    if Config.USE_SOCKET_MODE:
+        return {"error": "OAuth not available in Socket Mode"}, 400
+    return slack_app.oauth_flow.handle_callback(request)
 
 
 @flask_app.route("/", methods=["GET"])

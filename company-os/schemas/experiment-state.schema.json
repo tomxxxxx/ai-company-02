@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Experiment State",
+  "description": "Machine-readable state for a Company OS experiment",
+  "type": "object",
+  "required": ["id", "name", "status", "created", "hypothesis", "investment"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^EXP-[0-9]{3}$",
+      "description": "Experiment identifier, e.g. EXP-001"
+    },
+    "name": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["DRAFT", "APPROVED", "BUILDING", "LIVE", "VALIDATING", "SCALING", "PAUSED", "KILLED"]
+    },
+    "created": {
+      "type": "string",
+      "format": "date"
+    },
+    "approved": {
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "kill_date": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "Auto-kill if no traction by this date"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["SaaS", "Tool", "Service", "Marketplace"]
+    },
+    "hypothesis": {
+      "type": "string"
+    },
+    "investment": {
+      "type": "object",
+      "properties": {
+        "cap_eur": { "type": "number" },
+        "spent_eur": { "type": "number" },
+        "monthly_cost_eur": { "type": "number" }
+      },
+      "required": ["cap_eur", "spent_eur", "monthly_cost_eur"]
+    },
+    "thresholds": {
+      "type": "object",
+      "properties": {
+        "kill": {
+          "type": "object",
+          "properties": {
+            "users": { "type": "number" },
+            "paying_customers": { "type": "number" },
+            "mrr_eur": { "type": "number" }
+          }
+        },
+        "scale": {
+          "type": "object",
+          "properties": {
+            "users": { "type": "number" },
+            "paying_customers": { "type": "number" },
+            "mrr_eur": { "type": "number" }
+          }
+        }
+      }
+    },
+    "metrics_current": {
+      "type": "object",
+      "properties": {
+        "users_free": { "type": "number" },
+        "users_paid": { "type": "number" },
+        "mrr_eur": { "type": "number" },
+        "signups_this_week": { "type": "number" },
+        "churn_rate": { "type": "number" }
+      }
+    },
+    "distribution_channels": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "tech_stack": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "decision_log": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "decision": { "type": "string" },
+          "by": { "type": "string" },
+          "rationale": { "type": "string" }
+        }
+      }
+    }
+  }
+}

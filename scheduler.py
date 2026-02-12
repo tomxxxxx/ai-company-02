@@ -43,29 +43,26 @@ logger = logging.getLogger("scheduler")
 
 def run_once():
     """Run a single orchestration cycle."""
-    from core.orchestrator import run_cycle
+    from core.cycle_runner import run_cycle as run_cycle_v2
 
     logger.info("=" * 40)
-    logger.info("SCHEDULER: Starting cycle")
+    logger.info("SCHEDULER: Starting cycle (Company OS v2)")
     logger.info("=" * 40)
 
     try:
-        state = run_cycle()
+        result = run_cycle_v2()
 
         # Log cycle result
-        result = {
+        entry = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "cycle": state.get("cycle_count", 0),
-            "phase": state.get("current_phase", "unknown"),
-            "mrr": state.get("metrics", {}).get("mrr", 0),
-            "capital": state.get("financials", {}).get("current_capital", 0),
-            "success": True,
+            **result.to_dict(),
+            "success": len(result.errors) == 0,
         }
 
         with open(LOG_DIR / "cycle_history.jsonl", "a", encoding="utf-8") as f:
-            f.write(json.dumps(result) + "\n")
+            f.write(json.dumps(entry) + "\n")
 
-        logger.info(f"SCHEDULER: Cycle #{result['cycle']} complete")
+        logger.info(f"SCHEDULER: Cycle complete — {result.tickets_executed} tickets executed, {len(result.escalations)} escalations")
         return True
 
     except Exception as e:

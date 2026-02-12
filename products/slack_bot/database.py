@@ -39,6 +39,46 @@ class DatabaseManager:
                 ON tasks(channel_id, status)
                 """
             )
+            
+            # OAuth installations table
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS installations (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    client_id TEXT NOT NULL,
+                    enterprise_id TEXT,
+                    team_id TEXT,
+                    team_name TEXT,
+                    bot_token TEXT,
+                    bot_id TEXT,
+                    bot_user_id TEXT,
+                    bot_scopes TEXT,
+                    user_id TEXT,
+                    user_token TEXT,
+                    user_scopes TEXT,
+                    incoming_webhook_url TEXT,
+                    incoming_webhook_channel TEXT,
+                    incoming_webhook_channel_id TEXT,
+                    incoming_webhook_configuration_url TEXT,
+                    is_enterprise_install BOOLEAN DEFAULT FALSE,
+                    token_type TEXT DEFAULT 'bot',
+                    installed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(client_id, enterprise_id, team_id, user_id)
+                )
+                """
+            )
+            
+            # OAuth state store table
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS oauth_states (
+                    state TEXT PRIMARY KEY,
+                    expire_at INTEGER NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+                """
+            )
+            
             conn.commit()
             logger.info("Database initialised (%s)", self.db_path)
 
