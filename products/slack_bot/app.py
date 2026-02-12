@@ -57,10 +57,15 @@ def health_check():
 
 # ── Main ─────────────────────────────────────────────────────
 if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 3000))
+
     if Config.USE_SOCKET_MODE:
-        logger.info("Starting TaskMaster in Socket Mode (dev) ...")
+        logger.info("Starting TaskMaster in Socket Mode ...")
         sm = SocketModeHandler(slack_app, Config.SLACK_APP_TOKEN)
-        sm.start()
+        sm.connect()  # non-blocking — connects via WebSocket
+        # Also serve Flask so Railway/Render get a health-check port
+        logger.info("Health-check on port %s", port)
+        flask_app.run(host="0.0.0.0", port=port)
     else:
         port = int(os.environ.get("PORT", 5000))
         logger.info("Starting TaskMaster in HTTP mode on port %s ...", port)
