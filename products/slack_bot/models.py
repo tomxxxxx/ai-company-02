@@ -1,39 +1,37 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Text
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.sql import func
+"""Simple data models for TaskMaster (no ORM needed)."""
+
+from dataclasses import dataclass, field
 from datetime import datetime
+from typing import Optional
 
-Base = declarative_base()
 
-class Task(Base):
-    __tablename__ = 'tasks'
-    
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    description = Column(Text, nullable=False)
-    channel_id = Column(String(50), nullable=False)
-    channel_name = Column(String(100), nullable=True)
-    user_id = Column(String(50), nullable=False)
-    user_name = Column(String(100), nullable=True)
-    completed = Column(Boolean, default=False, nullable=False)
-    created_at = Column(DateTime, default=func.now(), nullable=False)
-    completed_at = Column(DateTime, nullable=True)
-    
-    def __repr__(self):
-        return f"<Task(id={self.id}, description='{self.description[:30]}...', completed={self.completed})>"
-    
-    def to_dict(self):
+@dataclass
+class Task:
+    id: int
+    channel_id: str
+    description: str
+    status: str = "open"
+    created_by: str = ""
+    created_at: Optional[str] = None
+    completed_at: Optional[str] = None
+    completed_by: Optional[str] = None
+
+    @property
+    def is_complete(self) -> bool:
+        return self.status == "completed"
+
+    def to_dict(self) -> dict:
         return {
-            'id': self.id,
-            'description': self.description,
-            'channel_id': self.channel_id,
-            'channel_name': self.channel_name,
-            'user_id': self.user_id,
-            'user_name': self.user_name,
-            'completed': self.completed,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
-            'completed_at': self.completed_at.isoformat() if self.completed_at else None
+            "id": self.id,
+            "channel_id": self.channel_id,
+            "description": self.description,
+            "status": self.status,
+            "created_by": self.created_by,
+            "created_at": self.created_at,
+            "completed_at": self.completed_at,
+            "completed_by": self.completed_by,
         }
-    
-    def mark_complete(self):
-        self.completed = True
-        self.completed_at = datetime.utcnow()
+
+    def __repr__(self):
+        desc = self.description[:30] + "..." if len(self.description) > 30 else self.description
+        return f"<Task #{self.id} '{desc}' [{self.status}]>"

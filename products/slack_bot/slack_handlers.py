@@ -1,127 +1,121 @@
+"""Slack event & command handlers for TaskMaster."""
+
 import logging
 from slack_bolt import App
-from slack_bolt.adapter.socket_mode import SocketModeHandler
 from task_manager import TaskManager
-from utils import format_task_list, format_task_created, format_task_completed, format_error
-import os
 
 logger = logging.getLogger(__name__)
 
-class SlackHandlers:
-    def __init__(self, app: App):
-        self.app = app
-        self.task_manager = TaskManager()
-        self._register_handlers()
-    
-    def _register_handlers(self):
-        """Register all Slack event handlers"""
-        self.app.command("/task")(self.handle_create_task)
-        self.app.command("/tasks")(self.handle_list_tasks)
-        self.app.command("/done")(self.handle_complete_task)
-        self.app.event("app_mention")(self.handle_app_mention)
-    
-    def handle_create_task(self, ack, say, command):
-        """Handle /task command to create a new task"""
+HELP_TEXT = (
+    "*TaskMaster Help* :clipboard:\n\n"
+    "Available commands:\n"
+    "• `/task [description]` — Create a new task\n"
+    "• `/tasks` — List all open tasks in this channel\n"
+    "• `/done [task_id]` — Mark a task as complete\n"
+    "• Mention me with *help* for this message"
+)
+
+
+def _fmt_error(msg: str) -> str:
+    return f":x: {msg}"
+
+
+def register_handlers(app: App):
+    """Wire every slash-command and event to the Slack app."""
+    tm = TaskManager()
+
+    # ── /task [description] ──────────────────────────────────
+
+    @app.command("/task")
+    def handle_create_task(ack, respond, command):
         ack()
-        
+        description = (command.get("text") or "").strip()
+        if not description:
+            respond(_fmt_error("Please provide a task description.\nUsage: `/task Buy more coffee`"))
+            return
+        if len(description) > 500:
+            respond(_fmt_error("Description too long (max 500 chars)."))
+            return
+
         try:
-            description = command['text'].strip()
-            if not description:
-                say(format_error("Please provide a task description. Usage: `/task [description]`"))
-                return
-            
-            channel_id = command['channel_id']
-            user_id = command['user_id']
-            
-            task = self.task_manager.create_task(
+            task = tm.create_task(
+                channel_id=command["channel_id"],
                 description=description,
-                channel_id=channel_id,
-                created_by=user_id
+                created_by=command["user_id"],
             )
-            
-            say(blocks=format_task_created(task))
-            
-        except Exception as e:
-            logger.error(f"Error creating task: {e}")
-            say(format_error("Failed to create task. Please try again."))
-    
-    def handle_list_tasks(self, ack, say, command):
-        """Handle /tasks command to list all open tasks"""
-        ack()
-        
-        try:
-            channel_id = command['channel_id']
-            tasks = self.task_manager.get_tasks_by_channel(channel_id)
-            
-            if not tasks:
-                say("No open tasks in this channel! 🎉")
-                return
-            
-            say(blocks=format_task_list(tasks))
-            
-        except Exception as e:
-            logger.error(f"Error listing tasks: {e}")
-            say(format_error("Failed to retrieve tasks. Please try again."))
-    
-    def handle_complete_task(self, ack, say, command):
-        """Handle /done command to mark a task as complete"""
-        ack()
-        
-        try:
-            task_id_str = command['text'].strip()
-            if not task_id_str:
-                say(format_error("Please provide a task ID. Usage: `/done [task_id]`"))
-                return
-            
-            try:
-                task_id = int(task_id_str)
-            except ValueError:
-                say(format_error("Invalid task ID. Please provide a number."))
-                return
-            
-            channel_id = command['channel_id']
-            user_id = command['user_id']
-            
-            task = self.task_manager.complete_task(task_id, channel_id, user_id)
-            
-            if task:
-                say(blocks=format_task_completed(task))
-            else:
-                say(format_error(f"Task #{task_id} not found in this channel or already completed."))
-                
-        except Exception as e:
-            logger.error(f"Error completing task: {e}")
-            say(format_error("Failed to complete task. Please try again."))
-    
-    def handle_app_mention(self, event, say):
-        """Handle app mentions for help and interaction"""
-        try:
-            text = event.get('text', '').lower()
-            
-            if 'help' in text:
-                help_message = {
+            respond(
+                {
+                    "response_type": "in_channel",
                     "blocks": [
                         {
                             "type": "section",
                             "text": {
                                 "type": "mrkdwn",
-                                "text": "*TaskMaster Help* 📋\n\nAvailable commands:\n• `/task [description]` - Create a new task\n• `/tasks` - List all open tasks\n• `/done [task_id]` - Mark task as complete"
-                            }
+                                "text": f":white_check_mark: *Task #{task['id']} created*\n{task['description']}",
+                            },
                         }
-                    ]
+                    ],
                 }
-                say(blocks=help_message["blocks"])
-            else:
-                say("Hi there! 👋 Type `@TaskMaster help` for available commands.")
-                
+            )
         except Exception as e:
-            logger.error(f"Error handling app mention: {e}")
-            say("Sorry, I encountered an error. Please try again.")
+            logger.error("Error creating task: %s", e)
+            respond(_fmt_error("Failed to create task. Please try again."))
 
-def create_socket_mode_handler(app: App) -> SocketModeHandler:
-    """Create and return Socket Mode handler"""
-    app_token = os.environ.get("SLACK_APP_TOKEN")
-    if not app_token:
-        raise ValueError("SLACK_APP_TOKEN environment variable is required")
-    
-    return SocketModeHandler(app, app_token)
+    # ── /tasks ───────────────────────────────────────────────
+
+    @app.command("/tasks")
+    def handle_list_tasks(ack, respond, command):
+        ack()
+        try:
+            tasks = tm.get_tasks(channel_id=command["channel_id"])
+            if not tasks:
+                respond(":clipboard: No open tasks in this channel. Use `/task` to create one!")
+                return
+
+            lines = [f":clipboard: *Open Tasks* ({len(tasks)} total)\n"]
+            for t in tasks:
+                lines.append(f"• *#{t['id']}* — {t['description']}  (by <@{t['created_by']}>)")
+            respond({"response_type": "in_channel", "text": "\n".join(lines)})
+        except Exception as e:
+            logger.error("Error listing tasks: %s", e)
+            respond(_fmt_error("Failed to list tasks."))
+
+    # ── /done [id] ───────────────────────────────────────────
+
+    @app.command("/done")
+    def handle_complete_task(ack, respond, command):
+        ack()
+        raw = (command.get("text") or "").strip()
+        if not raw:
+            respond(_fmt_error("Usage: `/done [task_id]`"))
+            return
+        try:
+            task_id = int(raw)
+        except ValueError:
+            respond(_fmt_error("Invalid task ID — please provide a number."))
+            return
+
+        try:
+            ok = tm.complete_task(task_id, command["channel_id"], command["user_id"])
+            if ok:
+                respond(
+                    {
+                        "response_type": "in_channel",
+                        "text": f":tada: Task #{task_id} marked as complete!",
+                    }
+                )
+            else:
+                respond(_fmt_error(f"Task #{task_id} not found in this channel or already completed."))
+        except Exception as e:
+            logger.error("Error completing task: %s", e)
+            respond(_fmt_error("Failed to complete task."))
+
+    # ── @mention ─────────────────────────────────────────────
+
+    @app.event("app_mention")
+    def handle_mention(event, say):
+        text = (event.get("text") or "").lower()
+        if "help" in text:
+            say(HELP_TEXT)
+        else:
+            say("Hi there! :wave: Type `@TaskMaster help` for available commands.")
