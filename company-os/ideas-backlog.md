@@ -21,10 +21,7 @@ Jede Idee hat:
 
 ## Aktive Ideen
 
-### [system | hoch | 2026-02-13] Planungsebene Token-Awareness einbauen (KRITISCH)
-Die Planungsebene muss lernen, Tasks unter Token-Limits zu planen. Iteration #6 scheiterte mit Rate-Limit-Fehler trotz automatischem Retry. Statt 7 Aktionen → max 3 Aktionen pro Iteration. Task-Splitting: "Analysiere nur 2 Dateien, dokumentiere Ergebnisse, nächste Iteration macht weiter". Verhindert Rate-Limit-Failures. SYSTEMKRITISCH.
-
-### [system | hoch | 2026-02-13] Token-bewusste Legacy-Analyse (Mini-Iteration)
+### [system | mittel | 2026-02-13] Token-bewusste Legacy-Analyse (Mini-Iteration)
 Nach Planungsebene-Fix: Mini-Iteration mit nur 1-2 Legacy-Dateien analysieren (z.B. nur core/agent.py und core/orchestrator.py), Ergebnisse dokumentieren, dann in nächster Iteration fortsetzen. Beweist token-effiziente Arbeitsweise.
 
 ### [system | hoch | 2026-02-12] Dokumentation konsolidieren

@@ -44,7 +44,7 @@ Jede Ebene ist ein Claude-API-Call mit Tool-Use. Jede kann Thomas-Tasks erstelle
 | `company-os/prompts/` | System-Prompts aller 6 Ebenen |
 | `core/autonomous/` | Gesamter Loop-Code (runner, layers, tools, state) |
 | `data/iterations/` | Logs und Outputs aller bisherigen Iterationen |
-| `data/company_state.json` | Unternehmens-Status (Finanzen, Produkte, Metriken) |
+| `company_state.json` | Unternehmens-Status (Finanzen, Produkte, Metriken) |
 | `HUMAN_ACTION_NEEDED.md` | Auto-generierte Thomas-Tasks bei Blockierung |
 
 ---
@@ -61,7 +61,7 @@ Jede Ebene ist ein Claude-API-Call mit Tool-Use. Jede kann Thomas-Tasks erstelle
 ## KONTEXT VERTIEFEN
 
 Falls du mehr Details brauchst, lies diese Dateien:
-- `data/company_state.json` → Finanzen, Produkte, Metriken
+- `company_state.json` → Finanzen, Produkte, Metriken
 - `data/iterations/` → Alle bisherigen Iterationen (JSON)
 - `company-os/operator-briefing.md` → Thomas' aktuelle Vorgaben
 - `HUMAN_ACTION_NEEDED.md` → Offene Eskalationen
@@ -77,4 +77,4 @@ Lies die Datei ONBOARDING.md im Workspace. Du bist der SYSTEM ARCHITECT dieses U
 
 ---
 
-**Letzte Aktualisierung:** 13. Feb 2026, Iteration #7 — Dokumentation konsolidiert, Legacy-Referenzen bereinigt
+**Letzte Aktualisierung:** 13. Feb 2026, Iteration #10 — Dokumentation konsolidiert, company_state.json erstellt, 6-Ebenen-System stabilisiert
