@@ -1,0 +1,43 @@
+{
+  "capital": 9607.45,
+  "mrr": 0.00,
+  "phase": "VALIDATE",
+  "products": ["slack_bot"],
+  "last_updated": "2026-02-13",
+  "beta_program": {
+    "active_testers": [],
+    "metrics": {
+      "total_testers": 0,
+      "active_testers": 0,
+      "churned_testers": 0,
+      "avg_nps_score": null,
+      "avg_daily_tasks": null,
+      "avg_time_saved_minutes": null,
+      "completion_rate": null
+    },
+    "feedback_summary": {
+      "most_requested_features": [],
+      "common_pain_points": [],
+      "success_stories": []
+    },
+    "outreach_status": {
+      "linkedin_messages_sent": 0,
+      "twitter_dms_sent": 0,
+      "demo_calls_scheduled": 0,
+      "demo_calls_completed": 0,
+      "beta_signups": 0,
+      "target_contacts": [
+        "Sarah Chen - VP Engineering @ GitLab",
+        "Marcus Rodriguez - CTO @ Buffer", 
+        "Lisa Thompson - Head of Product @ Zapier",
+        "David Kim - Engineering Manager @ Automattic",
+        "Rachel Green - Team Lead @ InVision",
+        "Mike Cohn - Agile Alliance",
+        "Pieter Levels - Nomad List",
+        "Courtland Allen - Indie Hackers",
+        "Justin Jackson - Transistor.fm",
+        "Nathan Barry - ConvertKit"
+      ]
+    }
+  }
+}
