@@ -41,6 +41,34 @@ Probleme:
 - **Junk-Dateien im Root**: Das System hat ~10 Analyse-Dokumente im Root erstellt (ITERATION_7_*.md, LEGACY_*.md, TOKEN_EFFICIENT_STRATEGIES.md, temp_module_analysis.md) und ein `docs/` Verzeichnis.
 - **Wiederholte Arbeit**: Weil die Iteration nie gespeichert wurde, hat das System 10 Mal dieselbe Legacy-Analyse gemacht. Die Leitebene konnte die vorherige Iteration nicht sehen.
 
+### [2026-02-13] KRITISCHES FEEDBACK: Workspace-Chaos, Leitebene und Evaluationsebene
+
+#### Workspace ist ein Chaos
+
+Es liegen immer noch viele **veraltete Dateien im Root**, die nichts mit dem autonomen System zu tun haben und die Agenten verwirren. Beispiele:
+
+- `OUTREACH_STRATEGY.md`, `outreach-templates.md` — veraltete Marketing-Dokumente, irrelevant
+- `privacy.html`, `terms.html`, `styles.css` — Slack-Bot-Website-Dateien, gehören nach `products/slack_bot/` oder gelöscht
+- `SLACK_BOT_SPEC.md`, `SLACK_DIRECTORY_SUBMISSION.md` — Slack-Bot-Doku, gehört nach `products/slack_bot/`
+- `business-playbook.md`, `VALIDATION_PLAYBOOK.md`, `TASK_TODAY.md`, `THOMAS_NEXT_SESSION.md` — veraltete Planungsdokumente
+- `scheduler.py`, `taskmaster.db` — alter Code/Daten
+- `company_state.json` im Root — Duplikat, die echte liegt in `data/company_state.json`
+- `docs/` — existiert noch mit alten Analyse-Dateien
+
+**Das Problem**: Wenn die Agenten den Workspace sehen, entsteht der Eindruck dass der Slack-Bot das Hauptprojekt ist. Das ist FALSCH. Das Hauptprojekt ist das autonome System. Alles was im Root liegt und nicht direkt dazu gehört, lenkt ab.
+
+**Die Leitebene hätte das selbst erkennen müssen.** Das ist genau ihre Aufgabe: Probleme in den Arbeitsabläufen identifizieren. Stattdessen hat sie Token-Awareness als "Idee" aus dem Backlog genommen und nicht gemerkt, dass das schon implementiert war. Die Leitebene muss **aktiver beobachten** und **kritischer denken**.
+
+#### Evaluationsebene ist unkritisch
+
+Die Evaluationsebene gibt 5/5 Sterne für "Dateien löschen" und nennt es "AUSSERGEWÖHNLICH" und "Paradebeispiel". Das ist absurd. 5/5 Sterne sind für echte Durchbrüche reserviert — erstes Produkt, erster Kunde, revolutionäre System-Verbesserung. Cleanup-Arbeit ist maximal 3 Sterne.
+
+**Die Evaluationsebene MUSS konkrete Kritik üben.** "Keine Probleme aufgetreten" ist nicht akzeptabel. Es gibt IMMER Verbesserungspotential. Die Prompts beider Ebenen wurden entsprechend verschärft.
+
+#### Priorität: Aufräumen JETZT
+
+Die Leitebene soll das Root-Verzeichnis aufräumen als **höchste Priorität** in den Backlog aufnehmen. Nicht "irgendwann", nicht "wenn Zeit ist" — JETZT. Jede Iteration in der die Agenten durch irrelevante Dateien verwirrt werden, ist verschwendetes Geld.
+
 ### [2026-02-12] Thomas' persönliche Kontakte
 
 Thomas' private Kontakte werden NICHT für Business genutzt.
