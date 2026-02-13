@@ -21,8 +21,8 @@ Jede Idee hat:
 
 ## Aktive Ideen
 
-### [system | hoch | 2026-02-13] Token-bewusste Legacy-Analyse durchführen
-Iteration #6 scheiterte an Token-Limits trotz perfekter Pläne. Statt 7 Aktionen auf einmal: eine kleine, token-effiziente Legacy-Analyse-Iteration durchführen. Nur 2-3 Dateien analysieren, Ergebnisse dokumentieren, dann in nächster Iteration fortsetzen.
+### [system | hoch | 2026-02-13] Token-bewusste Legacy-Analyse (Mini-Iteration)
+Iteration #6 scheiterte an Token-Limits trotz perfekter Pläne. Statt 7 Aktionen: Mini-Iteration mit nur 1-2 Legacy-Dateien analysieren (z.B. nur core/agent.py und core/orchestrator.py), Ergebnisse dokumentieren, dann in nächster Iteration fortsetzen. Beweist token-effiziente Arbeitsweise.
 
 ### [system | mittel | 2026-02-12] REVERT-Funktionalität implementieren
 Das neue Evaluations-System kann REVERT empfehlen, aber der Runner loggt nur ein Warning. Git-Revert-Funktionalität für fehlerhafte Iterationen nachrüsten.
@@ -48,5 +48,5 @@ Thomas hat Rate-Limit-Retry mit exponentiellem Backoff implementiert (60s, 120s,
 ### [system | niedrig | 2026-02-13] Robustheit-Features erweitern
 Nach erfolgreichem Rate-Limit-Retry: weitere Robustheit-Features wie automatische Backup-Erstellung vor riskanten Operationen, System-Health-Monitoring, oder Rollback-Mechanismen für fehlerhafte Commits.
 
-### [system | hoch | 2026-02-13] Token-effiziente Analyse-Strategien
-Iteration #6 scheiterte an Rate-Limits trotz Retry-Mechanismus. Strategien entwickeln für große Analyse-Tasks: Datei-weise Verarbeitung, Batch-Processing, oder Aufgaben-Splitting um Token-Limits zu respektieren.
+### [system | mittel | 2026-02-13] Planungsebene Token-Awareness einbauen
+Die Planungsebene muss lernen, Tasks unter Token-Limits zu planen. Statt 7 Aktionen → max 3 Aktionen pro Iteration. Oder sogar Task-Splitting: "Analysiere nur 2 Dateien, dokumentiere Ergebnisse, nächste Iteration macht weiter". Verhindert Rate-Limit-Failures.
