@@ -21,6 +21,9 @@ Jede Idee hat:
 
 ## Aktive Ideen
 
+### [system | hoch | 2026-02-13] Junk-Dateien aus Iteration #7 aufräumen
+Entferne die ~10 Analyse-Dokumente im Root (ITERATION_7_*.md, LEGACY_*.md, TOKEN_EFFICIENT_STRATEGIES.md, temp_module_analysis.md) und das docs/ Verzeichnis, die durch die gescheiterte Iteration #7 entstanden sind. Sauberer Workspace = bessere System-Performance. Schnelle Win-Iteration.
+
 ### [system | hoch | 2026-02-13] Planungsebene Token-Awareness einbauen (KRITISCH)
 Die Planungsebene muss lernen, Tasks unter Token-Limits zu planen. Iteration #6 scheiterte mit Rate-Limit-Fehler trotz automatischem Retry. Statt 7 Aktionen → max 3 Aktionen pro Iteration. Task-Splitting: "Analysiere nur 2 Dateien, dokumentiere Ergebnisse, nächste Iteration macht weiter". Verhindert Rate-Limit-Failures. SYSTEMKRITISCH.
 
