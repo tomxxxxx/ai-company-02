@@ -39,8 +39,8 @@ TICKET-001 Code wurde generiert aber nie getestet/deployt. Thomas muss Slack Das
 ### [system | niedrig | 2026-02-12] Tool-Fähigkeiten erweitern (später)
 Mittelfristig: HTTP-Requests, Email-Versand, Web-Scraping. Aber erst wenn System ohne externe Dependencies arbeiten kann.
 
-### [experiment | niedrig | 2026-02-12] Neue Produkt-Hypothesen evaluieren
-5 SaaS-Ideen wurden bereits analysiert (TOP_5_SAAS_IDEAS.json). Sobald das System reif genug ist, können wir systematisch neue Experimente starten.
+### [system | niedrig | 2026-02-13] .stop-Datei Self-Shutdown nutzen
+Thomas hat eine .stop-Datei-Mechanismus implementiert. Das System kann sich selbst anhalten mit `write_file(".stop", "Grund...")`. Nützlich für Self-Diagnosis: wenn das System erkennt, dass es in Loops läuft oder kritische Fehler macht, kann es sich selbst stoppen und Thomas informieren.
 
 ### [system | mittel | 2026-02-13] Obsolete Thomas-Tasks bereinigen
 Thomas-Tasks in HUMAN_ACTION_NEEDED.md werden durch Iterationen oft obsolet (System löst Problem selbst, oder Aufgabe nicht mehr relevant). Leitebene soll veraltete Tasks aktiv löschen statt sie ansammeln zu lassen. Reduziert Verwirrung.
