@@ -55,15 +55,9 @@ Es liegen immer noch viele **veraltete Dateien im Root**, die nichts mit dem aut
 - `company_state.json` im Root — Duplikat, die echte liegt in `data/company_state.json`
 - `docs/` — existiert noch mit alten Analyse-Dateien
 
-**Das Problem**: Wenn die Agenten den Workspace sehen, entsteht der Eindruck dass der Slack-Bot das Hauptprojekt ist. Das ist FALSCH. Das Hauptprojekt ist das autonome System. Alles was im Root liegt und nicht direkt dazu gehört, lenkt ab.
+**Das Problem**: Wenn die Agenten den Workspace sehen, entsteht der Eindruck dass der Slack-Bot das Hauptprojekt ist. Das ist FALSCH. Das Hauptprojekt ist das autonome System. Der Slack Bot ist ein Experiment, an dem das System sich ausprobieren kann, wenn es der Meinung ist, dass wir das System an einem Projekt ausprobieren sollen. Alles was im Root liegt und nicht direkt zum Hauptsystem gehört, lenkt ab.
 
 **Die Leitebene hätte das selbst erkennen müssen.** Das ist genau ihre Aufgabe: Probleme in den Arbeitsabläufen identifizieren. Stattdessen hat sie Token-Awareness als "Idee" aus dem Backlog genommen und nicht gemerkt, dass das schon implementiert war. Die Leitebene muss **aktiver beobachten** und **kritischer denken**.
-
-#### Evaluationsebene ist unkritisch
-
-Die Evaluationsebene gibt 5/5 Sterne für "Dateien löschen" und nennt es "AUSSERGEWÖHNLICH" und "Paradebeispiel". Das ist absurd. 5/5 Sterne sind für echte Durchbrüche reserviert — erstes Produkt, erster Kunde, revolutionäre System-Verbesserung. Cleanup-Arbeit ist maximal 3 Sterne.
-
-**Die Evaluationsebene MUSS konkrete Kritik üben.** "Keine Probleme aufgetreten" ist nicht akzeptabel. Es gibt IMMER Verbesserungspotential. Die Prompts beider Ebenen wurden entsprechend verschärft.
 
 #### Priorität: Aufräumen JETZT
 
