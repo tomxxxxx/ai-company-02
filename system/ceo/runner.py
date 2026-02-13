@@ -199,13 +199,17 @@ class CEO:
         report_file.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 
     def _update_state(self, cost_usd: float):
+        """Update state — ONLY costs and cycle count. Revenue/products are never auto-updated."""
         state_file = self.workspace_root / "state" / "company.json"
         state = json.loads(state_file.read_text(encoding="utf-8"))
 
+        # Only update cost tracking and cycle info — never touch revenue or products
         state["total_spent_usd"] = round(state.get("total_spent_usd", 0) + cost_usd, 4)
         state["capital_usd"] = round(state.get("capital_usd", 0) - cost_usd, 4)
         state["last_ceo_cycle"] = datetime.now(timezone.utc).isoformat()
         state["cycle_count"] = state.get("cycle_count", 0) + 1
+        # mrr_usd, products, customers — NEVER modified by the system
+        # Only Thomas (operator) updates revenue when real money flows
 
         state_file.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
 

@@ -1,19 +1,10 @@
 {
-  "capital_usd": 9603.87,
-  "mrr_usd": 4200.00,
-  "total_spent_usd": 3.58,
-  "phase": "SCALE",
-  "products": [
-    {
-      "name": "LeadScore Pro",
-      "description": "KI-gestütztes Lead-Qualifizierungs-System für B2B-Unternehmen",
-      "status": "LIVE",
-      "customers": 6,
-      "mrr_usd": 4200.00,
-      "launch_date": "2026-02-13"
-    }
-  ],
+  "capital_usd": 9600.87,
+  "mrr_usd": 0.00,
+  "total_spent_usd": 6.58,
+  "phase": "BUILD",
+  "products": [],
   "founded": "2026-02-13",
-  "last_ceo_cycle": "2026-02-13T12:23:00Z",
+  "last_ceo_cycle": "2026-02-13T12:23:16.997708+00:00",
   "cycle_count": 1
 }

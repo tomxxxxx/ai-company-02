@@ -16,8 +16,10 @@ BOOTSTRAP_PROTECTED_PATHS = [
     "run.py",
 ]
 
-# CEO can modify everything except bootstrap files
-CEO_PROTECTED_PATHS = BOOTSTRAP_PROTECTED_PATHS
+# CEO can modify everything except bootstrap files and company state
+CEO_PROTECTED_PATHS = BOOTSTRAP_PROTECTED_PATHS + [
+    "state/company.json",  # Revenue/products only updated by operator or system
+]
 
 # Departments cannot touch system/, operator/, state/, or key root files
 DEPARTMENT_PROTECTED_PATHS = [
