@@ -48,5 +48,5 @@ Thomas-Tasks in HUMAN_ACTION_NEEDED.md werden durch Iterationen oft obsolet (Sys
 ### [system | niedrig | 2026-02-13] Robustheit-Features erweitern
 Nach erfolgreichem Rate-Limit-Retry: weitere Robustheit-Features wie automatische Backup-Erstellung vor riskanten Operationen, System-Health-Monitoring, oder Rollback-Mechanismen für fehlerhafte Commits.
 
-### [system | mittel | 2026-02-13] Planungsebene Token-Awareness einbauen
-Die Planungsebene muss lernen, Tasks unter Token-Limits zu planen. Statt 7 Aktionen → max 3 Aktionen pro Iteration. Oder sogar Task-Splitting: "Analysiere nur 2 Dateien, dokumentiere Ergebnisse, nächste Iteration macht weiter". Verhindert Rate-Limit-Failures.
+### [system | hoch | 2026-02-13] Planungsebene Token-Awareness einbauen
+Die Planungsebene muss lernen, Tasks unter Token-Limits zu planen. Statt 7 Aktionen → max 3 Aktionen pro Iteration. Oder sogar Task-Splitting: "Analysiere nur 2 Dateien, dokumentiere Ergebnisse, nächste Iteration macht weiter". Verhindert Rate-Limit-Failures. DRINGEND nach Iteration #6 Failure.
