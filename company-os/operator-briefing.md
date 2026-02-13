@@ -20,14 +20,6 @@ Produkte sind Outputs des Systems. Das System selbst ist das Kernprodukt.
 
 Iterationen dürfen kleine Schritte sein. "Legacy aufräumen", "eine Datei verbessern", "einen Prompt optimieren" — das ist völlig okay. Große Ziele erreicht man nach hunderten kleiner Iterationen. Nicht alles in eine Iteration packen.
 
-
-
-### [2026-02-13] Allgemeines Feedback zu den bisherigen Iterationen
-
-- Iterationen #3 und #5 liefen erfolgreich alle 6 Ebenen durch — die Architektur funktioniert.
-- Iteration #6 zeigte perfekte Planungsarbeit, scheiterte aber an Rate-Limits in der Ausführung.
-- Die Leitebene soll erledigte Einträge in diesem Briefing aktiv löschen.
-
 ### [2026-02-13] Systemänderungen — Rate-Limit Retry, Stopp-Mechanismus, keine Blockierung
 
 Folgende Änderungen wurden vom Operator vorgenommen:

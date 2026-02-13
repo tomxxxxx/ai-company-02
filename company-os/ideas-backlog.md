@@ -42,11 +42,11 @@ Mittelfristig: HTTP-Requests, Email-Versand, Web-Scraping. Aber erst wenn System
 ### [experiment | niedrig | 2026-02-12] Neue Produkt-Hypothesen evaluieren
 5 SaaS-Ideen wurden bereits analysiert (TOP_5_SAAS_IDEAS.json). Sobald das System reif genug ist, können wir systematisch neue Experimente starten.
 
-### [system | mittel | 2026-02-13] Rate-Limit-Retry Effektivität analysieren
-Trotz implementiertem Rate-Limit-Retry scheiterte Iteration #6 an Rate-Limits. Möglicherweise sind die Token-Limits zu niedrig für große Analyse-Tasks. Strategie für Token-intensive Operationen entwickeln.
+### [system | niedrig | 2026-02-13] Rate-Limit-Retry Effektivität testen
+Thomas hat Rate-Limit-Retry mit exponentiellem Backoff implementiert (60s, 120s, 240s, 480s, 960s). Testen ob das die Rate-Limit-Probleme aus Iteration #6 behebt, oder ob zusätzliche Token-Management-Strategien nötig sind.
 
 ### [system | niedrig | 2026-02-13] Robustheit-Features erweitern
 Nach erfolgreichem Rate-Limit-Retry: weitere Robustheit-Features wie automatische Backup-Erstellung vor riskanten Operationen, System-Health-Monitoring, oder Rollback-Mechanismen für fehlerhafte Commits.
 
-### [system | mittel | 2026-02-13] Token-effiziente Analyse-Strategien
+### [system | hoch | 2026-02-13] Token-effiziente Analyse-Strategien
 Iteration #6 scheiterte an Rate-Limits trotz Retry-Mechanismus. Strategien entwickeln für große Analyse-Tasks: Datei-weise Verarbeitung, Batch-Processing, oder Aufgaben-Splitting um Token-Limits zu respektieren.

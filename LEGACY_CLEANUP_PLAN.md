@@ -9,8 +9,10 @@
 
 **Datum:** 2026-02-13  
 **Iteration:** #7  
-**Entfernte Module:** 5 Legacy-Module (zirkulär abhängiges System)  
+**Entfernte Module:** 5 Legacy-Module (zirkulär abhängiges system)  
 **Erkenntnisse:** Das Legacy-System war ein zusammenhängendes 5-Modul-System mit zirkulären Dependencies, aber komplett ungenutzt.
+
+**Update Iteration #7:** Vollständige Core-Module Legacy-Analyse durchgeführt. Neue Erkenntnisse über Batch-Processing und Token-Management Module.
 
 ## SYSTEM-ARCHITEKTUR VERSTÄNDNIS
 
@@ -36,8 +38,10 @@ Das Projekt hat **zwei parallele Systeme**:
 - `core/scorecard_parser.py` — Parser für Experimente
 - `core/policy_engine.py` — Regelengine
 - `core/ticket_executor.py` — Ticket-Ausführung
+- `core/batch_processor.py` — Rate-Limit Management (alt)
+- `core/token_manager.py` — Token Budget Management (alt)
 - `core/llm.py` — LLM-Client (alt)
-- `core/state.py` — Zustandsmanagement
+- `core/state.py` — Zustandsmanagement (shared)
 
 ### ❌ LEGACY MODULE (SICHER LÖSCHBAR)
 
@@ -55,9 +59,18 @@ Das Projekt hat **zwei parallele Systeme**:
 
 Keine Module in dieser Kategorie identifiziert.
 
+### 🔍 NEUE ERKENNTNISSE (Iteration #7)
+
+#### Batch Processing & Token Management
+- `core/batch_processor.py` — Komplexes Rate-Limit-Management-System
+- `core/token_manager.py` — Token-Budget und Task-Splitting
+- **Status:** LEGACY aber funktional
+- **Ersetzt durch:** Thomas' Rate-Limit-Retry in `core/autonomous/llm_client.py`
+- **Empfehlung:** Parallel lassen bis neues System vollständig etabliert
+
 ## EMPFOHLENE LÖSCH-AKTION
 
-### Phase 1: Sichere Legacy-Löschung
+### Phase 1: Sichere Legacy-Löschung ✅ ERLEDIGT
 ```bash
 # Agent-Module löschen (eindeutig ungenutzt)
 rm agents/builder_agent.py
@@ -72,6 +85,17 @@ rm core/orchestrator.py
 ### Phase 2: System-Konsolidierung (später)
 Wenn das neue autonome System vollständig etabliert ist, kann das alte Company OS System (`scheduler.py` + zugehörige Module) entfernt werden. Dies ist aber nicht urgent, da beide Systeme parallel funktionieren.
 
+### Phase 3: Weitere Legacy-Optionen (optional)
+```bash
+# Wenn Company OS v2 nicht mehr benötigt wird:
+# rm core/cycle_runner.py core/ticket_*.py core/scorecard_parser.py
+# rm core/policy_engine.py core/batch_processor.py core/token_manager.py
+# rm core/llm.py
+# rm scheduler.py
+
+# ABER: Erst prüfen ob scheduler.py noch verwendet wird!
+```
+
 ## BEGRÜNDUNG DER ENTSCHEIDUNGEN
 
 ### Warum Agent-Module löschen?
@@ -83,6 +107,8 @@ Wenn das neue autonome System vollständig etabliert ist, kann das alte Company 
 - `cycle_runner.py` wird von `scheduler.py` importiert
 - Bildet ein funktionierendes, eigenständiges System
 - Kann parallel zum neuen System existieren
+- **Neu:** `batch_processor.py` und `token_manager.py` bieten ausgereiftes Rate-Limit-Management
+- Eventuell nützlich als Referenz für zukünftige Implementierungen
 
 ### Warum Orchestrator löschen?
 - Nicht importiert
