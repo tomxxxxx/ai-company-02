@@ -41,3 +41,9 @@ Mittelfristig: HTTP-Requests, Email-Versand, Web-Scraping. Aber erst wenn System
 
 ### [experiment | niedrig | 2026-02-12] Neue Produkt-Hypothesen evaluieren
 5 SaaS-Ideen wurden bereits analysiert (TOP_5_SAAS_IDEAS.json). Sobald das System reif genug ist, können wir systematisch neue Experimente starten.
+
+### [system | niedrig | 2026-02-13] Robustheit-Features erweitern
+Nach erfolgreichem Rate-Limit-Retry: weitere Robustheit-Features wie automatische Backup-Erstellung vor riskanten Operationen, System-Health-Monitoring, oder Rollback-Mechanismen für fehlerhafte Commits.
+
+### [system | mittel | 2026-02-13] Iteration-Continuation nach Rate-Limit-Fehlern
+Iteration #6 hatte detaillierte Pläne für Legacy-Analyse, wurde aber durch Rate-Limit unterbrochen. System sollte unterbrochene Iterationen mit vorhandenem Plan fortsetzen können, statt komplett neu zu planen.
