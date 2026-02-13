@@ -45,5 +45,5 @@ Mittelfristig: HTTP-Requests, Email-Versand, Web-Scraping. Aber erst wenn System
 ### [system | niedrig | 2026-02-13] Robustheit-Features erweitern
 Nach erfolgreichem Rate-Limit-Retry: weitere Robustheit-Features wie automatische Backup-Erstellung vor riskanten Operationen, System-Health-Monitoring, oder Rollback-Mechanismen für fehlerhafte Commits.
 
-### [system | mittel | 2026-02-13] Iteration-Continuation nach Rate-Limit-Fehlern
-Iteration #6 hatte detaillierte Pläne für Legacy-Analyse, wurde aber durch Rate-Limit unterbrochen. System sollte unterbrochene Iterationen mit vorhandenem Plan fortsetzen können, statt komplett neu zu planen.
+### [system | hoch | 2026-02-13] Iteration #6 Legacy-Analyse fortsetzen
+Iteration #6 hatte vollständige, detaillierte Pläne für Core-Module Legacy-Analyse, wurde aber durch Rate-Limit bei der Ausführung unterbrochen. Die Planungsarbeit ist nicht verloren und kann direkt fortgesetzt werden.
