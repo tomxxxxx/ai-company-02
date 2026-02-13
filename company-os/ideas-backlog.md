@@ -21,9 +21,6 @@ Jede Idee hat:
 
 ## Aktive Ideen
 
-### [system | hoch | 2026-02-13] Junk-Dateien aus Iteration #7 aufräumen
-Entferne die ~10 Analyse-Dokumente im Root (ITERATION_7_*.md, LEGACY_*.md, TOKEN_EFFICIENT_STRATEGIES.md, temp_module_analysis.md) und das docs/ Verzeichnis, die durch die gescheiterte Iteration #7 entstanden sind. Sauberer Workspace = bessere System-Performance. Schnelle Win-Iteration.
-
 ### [system | hoch | 2026-02-13] Planungsebene Token-Awareness einbauen (KRITISCH)
 Die Planungsebene muss lernen, Tasks unter Token-Limits zu planen. Iteration #6 scheiterte mit Rate-Limit-Fehler trotz automatischem Retry. Statt 7 Aktionen → max 3 Aktionen pro Iteration. Task-Splitting: "Analysiere nur 2 Dateien, dokumentiere Ergebnisse, nächste Iteration macht weiter". Verhindert Rate-Limit-Failures. SYSTEMKRITISCH.
 
@@ -47,6 +44,9 @@ Mittelfristig: HTTP-Requests, Email-Versand, Web-Scraping. Aber erst wenn System
 
 ### [system | niedrig | 2026-02-13] .stop-Datei Self-Shutdown nutzen
 Thomas hat eine .stop-Datei-Mechanismus implementiert. Das System kann sich selbst anhalten mit `write_file(".stop", "Grund...")`. Nützlich für Self-Diagnosis: wenn das System erkennt, dass es in Loops läuft oder kritische Fehler macht, kann es sich selbst stoppen und Thomas informieren.
+
+### [system | mittel | 2026-02-13] System-Performance-Monitoring einbauen
+Nach dem Erfolg von Iteration #8 sollte das System lernen, seine eigene Performance zu überwachen. Metriken wie Token-Verbrauch pro Iteration, Erfolgsrate, durchschnittliche Iterationsdauer tracken. Proaktive Erkennung von Performance-Degradation oder Loop-Patterns. Basis für Self-Optimization.
 
 ### [system | niedrig | 2026-02-13] Robustheit-Features erweitern
 Nach erfolgreichem Rate-Limit-Retry: weitere Robustheit-Features wie automatische Backup-Erstellung vor riskanten Operationen, System-Health-Monitoring, oder Rollback-Mechanismen für fehlerhafte Commits.
