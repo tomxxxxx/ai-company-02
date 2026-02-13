@@ -38,6 +38,7 @@ logger = logging.getLogger(__name__)
 
 WORKSPACE_ROOT = Path(__file__).resolve().parent.parent.parent
 HUMAN_FILE = WORKSPACE_ROOT / "HUMAN_ACTION_NEEDED.md"
+STOP_FILE = WORKSPACE_ROOT / ".stop"
 
 
 class AutonomousRunner:
@@ -293,6 +294,13 @@ class AutonomousRunner:
 
             if max_iterations > 0 and iteration_number > max_iterations:
                 logger.info(f"\nMax iterations ({max_iterations}) reached. Stopping loop.")
+                break
+
+            if STOP_FILE.exists():
+                reason = STOP_FILE.read_text(encoding="utf-8").strip() or "No reason given"
+                STOP_FILE.unlink()  # Remove so next run starts clean
+                logger.info(f"\n.stop file detected. Reason: {reason}")
+                logger.info("Loop stopped gracefully. Remove .stop or restart to continue.")
                 break
 
             try:
