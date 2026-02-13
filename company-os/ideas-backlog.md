@@ -24,11 +24,14 @@ Jede Idee hat:
 ### [system | hoch | 2026-02-13] Token-bewusste Legacy-Analyse (Mini-Iteration)
 Iteration #6 scheiterte an Token-Limits trotz perfekter Pläne. Statt 7 Aktionen: Mini-Iteration mit nur 1-2 Legacy-Dateien analysieren (z.B. nur core/agent.py und core/orchestrator.py), Ergebnisse dokumentieren, dann in nächster Iteration fortsetzen. Beweist token-effiziente Arbeitsweise.
 
-### [system | mittel | 2026-02-12] REVERT-Funktionalität implementieren
-Das neue Evaluations-System kann REVERT empfehlen, aber der Runner loggt nur ein Warning. Git-Revert-Funktionalität für fehlerhafte Iterationen nachrüsten.
+### [system | hoch | 2026-02-13] Planungsebene Token-Awareness einbauen
+Die Planungsebene muss lernen, Tasks unter Token-Limits zu planen. Statt 7 Aktionen → max 3 Aktionen pro Iteration. Oder sogar Task-Splitting: "Analysiere nur 2 Dateien, dokumentiere Ergebnisse, nächste Iteration macht weiter". Verhindert Rate-Limit-Failures. DRINGEND nach Iteration #6 Failure.
 
 ### [system | hoch | 2026-02-12] Dokumentation konsolidieren
 company_state.json enthält veraltete Felder. ONBOARDING.md wurde gestrafft aber referenziert noch alte Strukturen. Saubere Dokumentation = bessere Iterationen.
+
+### [system | mittel | 2026-02-12] REVERT-Funktionalität implementieren
+Das neue Evaluations-System kann REVERT empfehlen, aber der Runner loggt nur ein Warning. Git-Revert-Funktionalität für fehlerhafte Iterationen nachrüsten.
 
 ### [system | mittel | 2026-02-12] Lokale Tool-Alternativen entwickeln
 Statt externe APIs: lokale Email-Queue, file-basierte Analytics, Python-Web-Scraping ohne Services. System muss mit vorhandenen Tools arbeiten können.
@@ -42,11 +45,5 @@ Mittelfristig: HTTP-Requests, Email-Versand, Web-Scraping. Aber erst wenn System
 ### [system | niedrig | 2026-02-13] .stop-Datei Self-Shutdown nutzen
 Thomas hat eine .stop-Datei-Mechanismus implementiert. Das System kann sich selbst anhalten mit `write_file(".stop", "Grund...")`. Nützlich für Self-Diagnosis: wenn das System erkennt, dass es in Loops läuft oder kritische Fehler macht, kann es sich selbst stoppen und Thomas informieren.
 
-### [system | mittel | 2026-02-13] Obsolete Thomas-Tasks bereinigen
-Thomas-Tasks in HUMAN_ACTION_NEEDED.md werden durch Iterationen oft obsolet (System löst Problem selbst, oder Aufgabe nicht mehr relevant). Leitebene soll veraltete Tasks aktiv löschen statt sie ansammeln zu lassen. Reduziert Verwirrung.
-
 ### [system | niedrig | 2026-02-13] Robustheit-Features erweitern
 Nach erfolgreichem Rate-Limit-Retry: weitere Robustheit-Features wie automatische Backup-Erstellung vor riskanten Operationen, System-Health-Monitoring, oder Rollback-Mechanismen für fehlerhafte Commits.
-
-### [system | hoch | 2026-02-13] Planungsebene Token-Awareness einbauen
-Die Planungsebene muss lernen, Tasks unter Token-Limits zu planen. Statt 7 Aktionen → max 3 Aktionen pro Iteration. Oder sogar Task-Splitting: "Analysiere nur 2 Dateien, dokumentiere Ergebnisse, nächste Iteration macht weiter". Verhindert Rate-Limit-Failures. DRINGEND nach Iteration #6 Failure.
