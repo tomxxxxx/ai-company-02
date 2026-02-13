@@ -25,7 +25,7 @@ Iterationen dürfen kleine Schritte sein. "Legacy aufräumen", "eine Datei verbe
 ### [2026-02-13] Allgemeines Feedback zu den bisherigen Iterationen
 
 - Iterationen #3 und #5 liefen erfolgreich alle 6 Ebenen durch — die Architektur funktioniert.
-- Evaluationsebene hat jetzt Commit/Revert/Continue-Empfehlungen — wurde in Iteration #5 vom System selbst implementiert.
+- Iteration #6 zeigte perfekte Planungsarbeit, scheiterte aber an Rate-Limits in der Ausführung.
 - Die Leitebene soll erledigte Einträge in diesem Briefing aktiv löschen.
 
 ### [2026-02-13] Systemänderungen — Rate-Limit Retry, Stopp-Mechanismus, keine Blockierung

@@ -6,6 +6,7 @@ import logging
 from pathlib import Path
 
 from core.autonomous.tools.base import Tool
+from core.autonomous.tools.token_utils import estimate_tokens, is_text_too_large, calculate_chunk_size
 
 logger = logging.getLogger(__name__)
 
@@ -65,12 +66,25 @@ class ReadFileTool(Tool):
         try:
             text = resolved.read_text(encoding="utf-8")
             lines = text.splitlines(keepends=True)
+            total_lines = len(lines)
+
+            # If no specific range requested, check if file is too large
+            if not start_line and not end_line:
+                if is_text_too_large(text, max_tokens=2000):
+                    # File is too large, suggest chunking
+                    chunk_size = calculate_chunk_size(total_lines, max_tokens_per_chunk=2000)
+                    return (f"[WARNING] File {path} is too large ({estimate_tokens(text)} tokens). "
+                           f"Use start_line/end_line parameters to read in chunks. "
+                           f"Suggested chunk size: {chunk_size} lines. "
+                           f"Total lines: {total_lines}\n\n"
+                           f"[First {chunk_size} lines preview]\n" + 
+                           "".join(lines[:chunk_size]))
 
             if start_line or end_line:
                 start = max(1, start_line or 1) - 1
                 end = min(len(lines), end_line or len(lines))
                 lines = lines[start:end]
-                return f"[Lines {start+1}-{end} of {resolved}]\n" + "".join(lines)
+                return f"[Lines {start+1}-{end} of {total_lines} in {resolved}]\n" + "".join(lines)
 
             return text
         except Exception as e:

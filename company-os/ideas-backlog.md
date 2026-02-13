@@ -47,3 +47,6 @@ Trotz implementiertem Rate-Limit-Retry scheiterte Iteration #6 an Rate-Limits. M
 
 ### [system | niedrig | 2026-02-13] Robustheit-Features erweitern
 Nach erfolgreichem Rate-Limit-Retry: weitere Robustheit-Features wie automatische Backup-Erstellung vor riskanten Operationen, System-Health-Monitoring, oder Rollback-Mechanismen für fehlerhafte Commits.
+
+### [system | mittel | 2026-02-13] Token-effiziente Analyse-Strategien
+Iteration #6 scheiterte an Rate-Limits trotz Retry-Mechanismus. Strategien entwickeln für große Analyse-Tasks: Datei-weise Verarbeitung, Batch-Processing, oder Aufgaben-Splitting um Token-Limits zu respektieren.

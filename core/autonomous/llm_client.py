@@ -14,6 +14,8 @@ import logging
 import time
 from typing import Callable, Optional
 
+from core.autonomous.tools.token_utils import estimate_tokens, is_text_too_large
+
 logger = logging.getLogger(__name__)
 
 
@@ -198,7 +200,10 @@ class ToolUseClient:
         """
         Call Claude API with retry on rate-limit (429) and server errors (5xx).
         Uses exponential backoff: 60s, 120s, 240s, 480s, 960s.
+        On rate limits, also tries to reduce message size if possible.
         """
+        original_kwargs = kwargs.copy()
+        
         for attempt in range(max_retries + 1):
             try:
                 return self._client.messages.create(**kwargs)
@@ -210,6 +215,13 @@ class ToolUseClient:
 
                 if (is_rate_limit or is_server_error or is_overloaded) and attempt < max_retries:
                     wait_time = initial_wait * (2 ** attempt)
+                    
+                    # On rate limit, try to reduce message size for next attempt
+                    if is_rate_limit and attempt == 0:
+                        kwargs = self._reduce_message_size(kwargs)
+                        if kwargs != original_kwargs:
+                            logger.info("Rate limit detected - trying with reduced message size")
+                    
                     logger.warning(
                         f"API error (attempt {attempt + 1}/{max_retries + 1}): "
                         f"{error_str[:200]}. Retrying in {wait_time:.0f}s..."
@@ -217,3 +229,47 @@ class ToolUseClient:
                     time.sleep(wait_time)
                 else:
                     raise
+
+    def _reduce_message_size(self, kwargs: dict) -> dict:
+        """
+        Try to reduce the size of messages to avoid rate limits.
+        Returns modified kwargs if reduction was possible, otherwise original kwargs.
+        """
+        try:
+            messages = kwargs.get("messages", [])
+            if not messages:
+                return kwargs
+            
+            # Find the largest message content and try to truncate it
+            max_size = 0
+            largest_msg_idx = -1
+            
+            for i, msg in enumerate(messages):
+                content = msg.get("content", "")
+                if isinstance(content, str):
+                    size = estimate_tokens(content)
+                    if size > max_size and size > 1000:  # Only truncate if > 1000 tokens
+                        max_size = size
+                        largest_msg_idx = i
+            
+            if largest_msg_idx >= 0:
+                # Truncate the largest message to ~80% of its size
+                msg = messages[largest_msg_idx]
+                content = msg["content"]
+                if isinstance(content, str):
+                    target_length = int(len(content) * 0.8)
+                    truncated = content[:target_length] + "\n\n[MESSAGE TRUNCATED DUE TO RATE LIMITS]"
+                    
+                    # Create new kwargs with truncated message
+                    new_kwargs = kwargs.copy()
+                    new_messages = messages.copy()
+                    new_messages[largest_msg_idx] = {**msg, "content": truncated}
+                    new_kwargs["messages"] = new_messages
+                    
+                    logger.info(f"Truncated message {largest_msg_idx} from {len(content)} to {len(truncated)} chars")
+                    return new_kwargs
+            
+            return kwargs
+        except Exception as e:
+            logger.warning(f"Failed to reduce message size: {e}")
+            return kwargs
