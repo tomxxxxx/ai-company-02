@@ -13,12 +13,50 @@ Bevor wir neu bauen: Was war kaputt?
 | Fake-Produktivität (Markdown statt Code) | Keine Unterscheidung zwischen "Datei erstellen" und "echte Wirkung" | Ergebnisse müssen messbar sein |
 | $1-2 pro Iteration, kaum Output | 6 LLM-Calls pro Iteration, egal was zu tun ist | Kosten proportional zum tatsächlichen Bedarf |
 
-## Vision & Zielhierarchie
+## Grundannahme
+
+Es ist nicht die Frage, OB ein KI-gesteuertes Unternehmen zu den erfolgreichsten der Welt wird, sondern WELCHES. Die Frage für uns: Was müssen wir JETZT tun, um das zu sein?
+
+## Warum KI-Unternehmen menschengeführte schlagen werden
+
+| Dimension | Menschliches Unternehmen | KI-Unternehmen |
+|-----------|--------------------------|----------------|
+| Entscheidungsgeschwindigkeit | Tage-Wochen (Meetings, Politik, Ego) | Sekunden-Minuten |
+| Skalierung | Headcount → Kommunikationsoverhead → n² Komplexität | Compute → linear skalierbar |
+| Institutionelles Wissen | Geht verloren (Mitarbeiterfluktuation, mündliche Tradition) | Permanent gespeichert, sofort abrufbar |
+| Pivot-Fähigkeit | Monate (Umschulung, Widerstand, Trägheit) | Sofort (neuer Prompt, neue Abteilung) |
+| Politik & Ego | Unvermeidlich, zerstört Unternehmen | Null |
+| Parallelität | Begrenzt durch Teamgröße | Beliebig viele Abteilungen gleichzeitig |
+| Lernrate | Langsam ("das haben wir schon immer so gemacht") | Jede Entscheidung + Ergebnis wird gespeichert und ausgewertet |
+| Kosten pro Entscheidung | $100k+ Jahresgehalt pro Entscheider | Cents pro Entscheidung |
+| Verfügbarkeit | 8h/Tag, Urlaub, Krankheit | 24/7/365 |
+| Konsistenz | Tagesform-abhängig | Deterministisch wiederholbar |
+
+Der entscheidende Vorteil: **Compounding**. Jede Entscheidung, jeder Fehler, jedes Ergebnis wird permanent gespeichert. Ein KI-Unternehmen wird mit jeder Iteration klüger — ein menschliches verliert Wissen wenn Mitarbeiter gehen.
+
+## Was wir JETZT tun müssen, um das Unternehmen zu sein das gewinnt
+
+### 1. Die beste Entscheidungsarchitektur bauen
+Das Unternehmen das die besten Entscheidungen am schnellsten trifft, gewinnt. Nicht das mit dem meisten Code oder den meisten Features. **Die Architektur IST das Produkt der ersten Phase.**
+
+### 2. Institutionelles Gedächtnis aufbauen
+Jede Entscheidung des CEO, jeder Abteilungs-Report, jedes Ergebnis muss gespeichert und durchsuchbar sein. Das ist der Compound-Interest-Mechanismus: Iteration #500 muss Zugriff auf die Erkenntnisse aus Iteration #1 haben.
+
+### 3. Selbstverbesserung einbauen
+Das System muss seine EIGENE Architektur verbessern können. Nicht nur Produkte bauen — sondern sich selbst besser machen. Der CEO muss erkennen können: "Meine Entscheidungsqualität ist schlecht in Bereich X, ich brauche einen besseren Prozess."
+
+### 4. Anpassungsfähig bleiben
+Wir wissen nicht, was das Unternehmen in 2 Jahren tut. Der aktuelle Slack-Bot ist irrelevant. Was zählt: Kann das System neue Chancen erkennen, evaluieren und ergreifen — schneller als jeder Mensch? Die Architektur muss produktagnostisch sein.
+
+### 5. Kompatibel mit besseren Modellen sein
+In 2 Jahren sind die LLMs dramatisch besser. Die Architektur muss so gebaut sein, dass ein besseres Modell sofort bessere Ergebnisse liefert — ohne Umbau. Saubere Abstraktion zwischen "Denken" (LLM) und "Handeln" (Tools).
+
+## Zielhierarchie
 
 - **Vision (10J)**: Eines der erfolgreichsten Unternehmen der Welt — autonom, KI-gesteuert, wirtschaftlich dominant.
-- **Langfristig (2-3J)**: Mehrere profitable Produkte, autonome Abteilungen die eigenständig operieren, wachsender Umsatz.
-- **Mittelfristig (6-12M)**: Erstes profitables Produkt, funktionierende autonome Geschäftsführung, validiertes Geschäftsmodell.
-- **Kurzfristig (1-3M)**: Architektur steht, CEO-Agent funktioniert, erste Abteilung arbeitet produktiv.
+- **Langfristig (2-3J)**: Autonomes System das eigenständig profitable Produkte findet, baut und skaliert.
+- **Mittelfristig (6-12M)**: CEO-Agent trifft nachweislich gute Entscheidungen, erstes validiertes Produkt, System verbessert sich selbst.
+- **Kurzfristig (1-3M)**: Architektur steht, CEO-Agent funktioniert, erste Abteilung liefert echte Ergebnisse. Thomas steuert mit.
 
 ---
 
@@ -330,7 +368,28 @@ vs. altes System: **6 Calls pro Iteration, immer, egal ob nötig = $1-2 mindeste
 
 ---
 
-## Was dieses System besser macht
+## Compound-Intelligence: Der eigentliche Wettbewerbsvorteil
+
+Das Killer-Feature ist nicht der CEO-Agent. Es ist das **institutionelle Gedächtnis**.
+
+```
+Iteration 1:     CEO trifft Entscheidung → Ergebnis gespeichert
+Iteration 10:    CEO hat 10 Datenpunkte → bessere Entscheidungen
+Iteration 100:   CEO erkennt Muster → vermeidet bekannte Fehler
+Iteration 1000:  CEO hat ein Entscheidungsframework → systematisch überlegen
+Iteration 10000: CEO operiert mit proprietärem Wissen das niemand sonst hat
+```
+
+Jedes menschliche Unternehmen verliert Wissen wenn Key-People gehen. Dieses System verliert **nie** Wissen. Das ist exponentieller Vorteil über Zeit.
+
+### Wie wir das implementieren
+
+- **Entscheidungslog**: Jede CEO-Entscheidung + Begründung + Ergebnis → `state/ceo_log.jsonl`
+- **Lessons-Learned-DB**: Explizite Erkenntnisse die der CEO aus Ergebnissen zieht
+- **Pattern-Erkennung**: CEO bekommt bei Entscheidungen relevante historische Entscheidungen als Kontext
+- **Fehler-Register**: Fehler die NIE wiederholt werden dürfen (z.B. "lösche nie system/")
+
+## Was dieses System besser macht als v1
 
 ### 1. Bedarfsgesteuert statt ritual-gesteuert
 Der CEO entscheidet ob und welche Abteilungen aktiviert werden. Keine Arbeit = keine Kosten.
@@ -354,10 +413,10 @@ Der CEO kann:
 - Reife: Abteilungen können Sub-Teams haben
 - Langfristig: CEO delegiert mehr, Operator delegiert mehr
 
-### 5. Kostenkontrolle
-- Budget pro Auftrag, Budget pro Abteilung, Gesamtbudget
-- Kein Auftrag = keine Kosten (vs. alte 6-Layer-Pipeline die immer läuft)
-- CEO muss Ausgaben begründen
+### 5. Selbstverbessernd
+- CEO hat Zugriff auf gesamte Entscheidungshistorie
+- Fehler werden permanent gespeichert und nie wiederholt
+- System wird mit jeder Iteration klüger — nicht nur produktiver
 
 ---
 
