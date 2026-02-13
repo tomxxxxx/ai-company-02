@@ -26,6 +26,8 @@ from core.ticket_parser import load_all_tickets, get_ready_tickets, get_blocked_
 from core.scorecard_parser import load_all_scorecards, evaluate_experiment
 from core.policy_engine import evaluate_ticket, evaluate_experiment_lifecycle, check_constraints
 from core.ticket_executor import TicketExecutor
+from core.token_manager import TokenManager
+from core.batch_processor import BatchProcessor
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +51,8 @@ class CycleResult:
         self.llm_calls = 0
         self.cost_estimate_usd = 0.0
         self.errors: list[str] = []
+        self.token_budget_exceeded = 0
+        self.batch_tasks_created = 0
 
     def to_dict(self) -> dict:
         return {
@@ -64,6 +68,10 @@ class CycleResult:
             "llm_calls": self.llm_calls,
             "cost_usd": self.cost_estimate_usd,
             "errors": self.errors,
+            "token_management": {
+                "budget_exceeded": self.token_budget_exceeded,
+                "batch_tasks_created": self.batch_tasks_created,
+            },
         }
 
     def summary(self) -> str:
@@ -297,9 +305,14 @@ def phase_notify(state: dict, result: CycleResult, dry_run: bool = False):
 
 # ── Main Cycle ──────────────────────────────────────────────
 
-def run_cycle(dry_run: bool = False) -> CycleResult:
+def run_cycle(dry_run: bool = False, enable_batch_processing: bool = True) -> CycleResult:
     """Run one complete autonomous cycle."""
     result = CycleResult()
+    
+    # Initialize token management components
+    if enable_batch_processing:
+        token_manager = TokenManager()
+        batch_processor = BatchProcessor(token_manager)
 
     logger.info("=" * 50)
     logger.info("COMPANY OS CYCLE STARTING")
@@ -331,14 +344,14 @@ def run_cycle(dry_run: bool = False) -> CycleResult:
     return result
 
 
-def run_loop(interval: int = 86400, max_cycles: int = 0):
+def run_loop(interval: int = 86400, max_cycles: int = 0, enable_batch_processing: bool = True):
     """Run cycles on a timer (default: daily)."""
     logger.info(f"Starting autonomous loop (interval={interval}s)")
     cycle = 0
 
     while True:
         cycle += 1
-        result = run_cycle()
+        result = run_cycle(enable_batch_processing=enable_batch_processing)
 
         # Log result
         cycle_log = {
