@@ -1,0 +1,257 @@
+{
+  "zapier_workflows": {
+    "workflow_1": {
+      "name": "Lead Import & Initial Scoring",
+      "trigger": {
+        "app": "Typeform",
+        "event": "New Entry",
+        "form": "Lead Qualification Form"
+      },
+      "actions": [
+        {
+          "step": 1,
+          "app": "Airtable",
+          "action": "Create Record",
+          "table": "Leads",
+          "mapping": {
+            "Name": "{{Name}}",
+            "Unternehmen": "{{Company}}",
+            "E-Mail": "{{Email}}",
+            "Telefon": "{{Phone}}",
+            "Branche": "{{Industry}}",
+            "Firmengröße": "{{Company_Size}}",
+            "Jahresumsatz": "{{Revenue}}",
+            "Lead-Quelle": "Website-Formular",
+            "Status": "Neu",
+            "Nächster Follow-up": "{{$datetime:add:1:day}}"
+          }
+        },
+        {
+          "step": 2,
+          "app": "Slack",
+          "action": "Send Channel Message",
+          "channel": "#leads",
+          "message": "🎯 Neuer Lead: {{Name}} von {{Company}} ({{Industry}}) - Score: {{Lead-Score}}"
+        },
+        {
+          "step": 3,
+          "app": "Gmail",
+          "action": "Send Email",
+          "to": "{{Email}}",
+          "subject": "Danke für Ihr Interesse - nächste Schritte",
+          "body": "Hallo {{Name}},\n\nvielen Dank für Ihr Interesse an LeadScore Pro!\n\nIch melde mich innerhalb von 24 Stunden bei Ihnen, um Ihre spezifischen Anforderungen zu besprechen.\n\nBis dahin können Sie gerne unsere Case Studies durchsehen:\n[Link zu Case Studies]\n\nBeste Grüße\nIhr LeadScore Pro Team"
+        }
+      ]
+    },
+    "workflow_2": {
+      "name": "CSV Lead Import Processing",
+      "trigger": {
+        "app": "Gmail",
+        "event": "New Email",
+        "filter": "has attachment AND subject contains 'Lead Import'"
+      },
+      "actions": [
+        {
+          "step": 1,
+          "app": "Parser by Zapier",
+          "action": "Extract Data",
+          "template": "CSV_Lead_Template"
+        },
+        {
+          "step": 2,
+          "app": "Airtable",
+          "action": "Create Multiple Records",
+          "table": "Leads",
+          "mapping": {
+            "Name": "{{Name}}",
+            "Unternehmen": "{{Company}}",
+            "E-Mail": "{{Email}}",
+            "Branche": "{{Industry}}",
+            "Lead-Quelle": "CSV-Import",
+            "Status": "Neu"
+          }
+        }
+      ]
+    },
+    "workflow_3": {
+      "name": "Daily Follow-up Reminders",
+      "trigger": {
+        "app": "Schedule by Zapier",
+        "event": "Every Day",
+        "time": "09:00"
+      },
+      "actions": [
+        {
+          "step": 1,
+          "app": "Airtable",
+          "action": "Find Records",
+          "table": "Leads",
+          "filter": "AND({Nächster Follow-up} <= TODAY(), {Status} != 'Gewonnen', {Status} != 'Verloren')"
+        },
+        {
+          "step": 2,
+          "app": "Gmail",
+          "action": "Send Email",
+          "to": "sales@company.com",
+          "subject": "📅 Follow-up Reminder - {{count}} Leads heute",
+          "body": "Guten Morgen!\n\nHeute stehen {{count}} Follow-ups an:\n\n{{#each records}}\n- {{Name}} ({{Company}}) - Score: {{Lead-Score}} - {{Priorität}}\n{{/each}}\n\n[Airtable öffnen]\n\nViel Erfolg!\nIhr Automatisierungs-System"
+        }
+      ]
+    },
+    "workflow_4": {
+      "name": "High-Score Lead Alert",
+      "trigger": {
+        "app": "Airtable",
+        "event": "Updated Record",
+        "table": "Leads",
+        "filter": "{Lead-Score} >= 85"
+      },
+      "actions": [
+        {
+          "step": 1,
+          "app": "Slack",
+          "action": "Send Direct Message",
+          "user": "@sales-manager",
+          "message": "🔥 HOT LEAD ALERT!\n\n{{Name}} - {{Company}}\nScore: {{Lead-Score}}/100\nBranche: {{Branche}}\nPotenzial: €{{Potenzial €/Monat}}/Monat\n\n[Sofort kontaktieren]"
+        },
+        {
+          "step": 2,
+          "app": "Airtable",
+          "action": "Update Record",
+          "fields": {
+            "Tags": "Hot Lead Alert",
+            "Nächster Follow-up": "{{$datetime:now}}"
+          }
+        }
+      ]
+    },
+    "workflow_5": {
+      "name": "Automated Follow-up Email Sequence",
+      "trigger": {
+        "app": "Airtable",
+        "event": "Updated Record",
+        "table": "Leads",
+        "filter": "AND({Status} = 'Kontaktiert', {Letzter Kontakt} <= DATEADD(TODAY(), -3, 'days'))"
+      },
+      "actions": [
+        {
+          "step": 1,
+          "app": "Filter by Zapier",
+          "condition": "{{Branche}} exists"
+        },
+        {
+          "step": 2,
+          "app": "Airtable",
+          "action": "Find Record",
+          "table": "Follow-up Templates",
+          "filter": "{Branche} = '{{Branche}}' AND {Sequenz-Schritt} = 2"
+        },
+        {
+          "step": 3,
+          "app": "Gmail",
+          "action": "Send Email",
+          "to": "{{E-Mail}}",
+          "subject": "{{Betreff}}",
+          "body": "{{E-Mail Text}}"
+        },
+        {
+          "step": 4,
+          "app": "Airtable",
+          "action": "Create Record",
+          "table": "Activities",
+          "mapping": {
+            "Lead": "{{Lead ID}}",
+            "Typ": "E-Mail gesendet",
+            "Datum": "{{$datetime:now}}",
+            "Beschreibung": "Automatische Follow-up E-Mail (Sequenz 2) versendet"
+          }
+        }
+      ]
+    },
+    "workflow_6": {
+      "name": "Lead Status Change Notifications",
+      "trigger": {
+        "app": "Airtable",
+        "event": "Updated Record",
+        "table": "Leads",
+        "filter": "{Status} = 'Gewonnen' OR {Status} = 'Verloren'"
+      },
+      "actions": [
+        {
+          "step": 1,
+          "app": "Slack",
+          "action": "Send Channel Message",
+          "channel": "#sales-updates",
+          "message": "{{#if Status == 'Gewonnen'}}🎉 DEAL WON!{{else}}❌ Deal Lost{{/if}}\n\n{{Name}} - {{Company}}\nWert: €{{Potenzial €/Monat}}/Monat\nBranche: {{Branche}}\nDauer: {{days_since_created}} Tage"
+        },
+        {
+          "step": 2,
+          "app": "Google Sheets",
+          "action": "Create Spreadsheet Row",
+          "spreadsheet": "Sales Dashboard",
+          "values": {
+            "Date": "{{$datetime:now}}",
+            "Lead": "{{Name}}",
+            "Company": "{{Company}}",
+            "Status": "{{Status}}",
+            "Value": "{{Potenzial €/Monat}}",
+            "Industry": "{{Branche}}",
+            "Source": "{{Lead-Quelle}}"
+          }
+        }
+      ]
+    }
+  },
+  "zapier_tables": {
+    "csv_parser_template": {
+      "name": "CSV Lead Import Template",
+      "columns": [
+        "Name",
+        "Company",
+        "Email",
+        "Phone",
+        "Industry",
+        "Company_Size",
+        "Revenue",
+        "Source",
+        "Notes"
+      ],
+      "mapping": {
+        "Name": "column_1",
+        "Company": "column_2",
+        "Email": "column_3",
+        "Phone": "column_4",
+        "Industry": "column_5",
+        "Company_Size": "column_6",
+        "Revenue": "column_7",
+        "Source": "column_8",
+        "Notes": "column_9"
+      }
+    }
+  },
+  "webhook_endpoints": {
+    "lead_import": {
+      "url": "https://hooks.zapier.com/hooks/catch/12345/abcdef/",
+      "method": "POST",
+      "description": "Manual lead import via API",
+      "payload": {
+        "name": "string",
+        "company": "string",
+        "email": "string",
+        "phone": "string",
+        "industry": "string",
+        "source": "string"
+      }
+    },
+    "scoring_update": {
+      "url": "https://hooks.zapier.com/hooks/catch/12345/ghijkl/",
+      "method": "POST",
+      "description": "Update lead scoring",
+      "payload": {
+        "lead_id": "string",
+        "new_score": "number",
+        "reason": "string"
+      }
+    }
+  }
+}

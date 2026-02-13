@@ -1,0 +1,352 @@
+{
+  "dashboard_name": "LeadScore Pro Dashboard",
+  "data_sources": [
+    {
+      "name": "Airtable_Leads",
+      "type": "Airtable",
+      "base_id": "{{AIRTABLE_BASE_ID}}",
+      "table": "Leads",
+      "api_key": "{{AIRTABLE_API_KEY}}"
+    },
+    {
+      "name": "Airtable_Activities",
+      "type": "Airtable", 
+      "base_id": "{{AIRTABLE_BASE_ID}}",
+      "table": "Activities",
+      "api_key": "{{AIRTABLE_API_KEY}}"
+    }
+  ],
+  "pages": [
+    {
+      "name": "Dashboard Overview",
+      "components": [
+        {
+          "type": "stat_card",
+          "name": "total_leads",
+          "title": "Gesamte Leads",
+          "query": "SELECT COUNT(*) as count FROM {{Airtable_Leads.data}}",
+          "value": "{{total_leads.data[0].count}}",
+          "icon": "users",
+          "color": "blue"
+        },
+        {
+          "type": "stat_card",
+          "name": "hot_leads",
+          "title": "🔥 Heiße Leads",
+          "query": "SELECT COUNT(*) as count FROM {{Airtable_Leads.data}} WHERE score >= 85",
+          "value": "{{hot_leads.data[0].count}}",
+          "icon": "fire",
+          "color": "red"
+        },
+        {
+          "type": "stat_card",
+          "name": "conversion_rate",
+          "title": "Conversion Rate",
+          "query": "SELECT (COUNT(CASE WHEN status = 'Gewonnen' THEN 1 END) * 100.0 / COUNT(*)) as rate FROM {{Airtable_Leads.data}}",
+          "value": "{{conversion_rate.data[0].rate}}%",
+          "icon": "trending-up",
+          "color": "green"
+        },
+        {
+          "type": "stat_card",
+          "name": "monthly_revenue",
+          "title": "Pipeline Wert",
+          "query": "SELECT SUM(potential_revenue) as revenue FROM {{Airtable_Leads.data}} WHERE status IN ('Qualifiziert', 'Angebot', 'Verhandlung')",
+          "value": "€{{monthly_revenue.data[0].revenue}}",
+          "icon": "euro",
+          "color": "yellow"
+        },
+        {
+          "type": "chart",
+          "name": "leads_by_status",
+          "title": "Leads nach Status",
+          "chart_type": "pie",
+          "query": "SELECT status, COUNT(*) as count FROM {{Airtable_Leads.data}} GROUP BY status",
+          "x_axis": "status",
+          "y_axis": "count",
+          "colors": {
+            "Neu": "#3B82F6",
+            "Kontaktiert": "#F59E0B", 
+            "Qualifiziert": "#10B981",
+            "Angebot": "#8B5CF6",
+            "Verhandlung": "#EF4444",
+            "Gewonnen": "#059669",
+            "Verloren": "#6B7280"
+          }
+        },
+        {
+          "type": "chart",
+          "name": "leads_by_industry",
+          "title": "Leads nach Branche",
+          "chart_type": "bar",
+          "query": "SELECT industry, COUNT(*) as count, AVG(score) as avg_score FROM {{Airtable_Leads.data}} GROUP BY industry ORDER BY count DESC",
+          "x_axis": "industry",
+          "y_axis": "count"
+        },
+        {
+          "type": "table",
+          "name": "hot_leads_table",
+          "title": "🔥 Top Priorität Leads",
+          "query": "SELECT name, company, industry, score, status, potential_revenue FROM {{Airtable_Leads.data}} WHERE score >= 85 ORDER BY score DESC LIMIT 10",
+          "columns": [
+            {"key": "name", "title": "Name"},
+            {"key": "company", "title": "Unternehmen"},
+            {"key": "industry", "title": "Branche"},
+            {"key": "score", "title": "Score"},
+            {"key": "status", "title": "Status"},
+            {"key": "potential_revenue", "title": "Potenzial €/Monat"}
+          ],
+          "row_actions": [
+            {
+              "label": "Kontaktieren",
+              "action": "open_url",
+              "url": "mailto:{{selectedRow.email}}"
+            },
+            {
+              "label": "Bearbeiten",
+              "action": "open_modal",
+              "modal": "edit_lead_modal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Lead Management",
+      "components": [
+        {
+          "type": "search_filter",
+          "name": "lead_search",
+          "placeholder": "Leads suchen...",
+          "fields": ["name", "company", "industry"]
+        },
+        {
+          "type": "select_filter",
+          "name": "status_filter",
+          "title": "Status Filter",
+          "options": ["Alle", "Neu", "Kontaktiert", "Qualifiziert", "Angebot", "Verhandlung"]
+        },
+        {
+          "type": "select_filter",
+          "name": "industry_filter",
+          "title": "Branche Filter",
+          "options": ["Alle", "Immobilien", "Unternehmensberatung", "Vermögensberatung", "IT-Dienstleister", "Versicherung", "Digitale Agentur"]
+        },
+        {
+          "type": "table",
+          "name": "all_leads_table",
+          "title": "Alle Leads",
+          "query": "SELECT * FROM {{Airtable_Leads.data}} WHERE ({{status_filter.value}} = 'Alle' OR status = {{status_filter.value}}) AND ({{industry_filter.value}} = 'Alle' OR industry = {{industry_filter.value}}) AND (name ILIKE '%{{lead_search.value}}%' OR company ILIKE '%{{lead_search.value}}%') ORDER BY score DESC",
+          "pagination": true,
+          "page_size": 25,
+          "columns": [
+            {"key": "name", "title": "Name"},
+            {"key": "company", "title": "Unternehmen"},
+            {"key": "email", "title": "E-Mail"},
+            {"key": "industry", "title": "Branche"},
+            {"key": "score", "title": "Score", "format": "number"},
+            {"key": "priority", "title": "Priorität"},
+            {"key": "status", "title": "Status"},
+            {"key": "last_contact", "title": "Letzter Kontakt", "format": "date"},
+            {"key": "next_followup", "title": "Nächster Follow-up", "format": "date"}
+          ],
+          "row_actions": [
+            {
+              "label": "E-Mail",
+              "action": "open_url",
+              "url": "mailto:{{selectedRow.email}}"
+            },
+            {
+              "label": "Anrufen",
+              "action": "open_url", 
+              "url": "tel:{{selectedRow.phone}}"
+            },
+            {
+              "label": "Bearbeiten",
+              "action": "open_modal",
+              "modal": "edit_lead_modal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "components": [
+        {
+          "type": "chart",
+          "name": "conversion_funnel",
+          "title": "Conversion Funnel",
+          "chart_type": "funnel",
+          "query": "SELECT status, COUNT(*) as count FROM {{Airtable_Leads.data}} GROUP BY status",
+          "stages": [
+            {"name": "Neu", "value": "{{conversion_funnel.data.find(d => d.status === 'Neu')?.count || 0}}"},
+            {"name": "Kontaktiert", "value": "{{conversion_funnel.data.find(d => d.status === 'Kontaktiert')?.count || 0}}"},
+            {"name": "Qualifiziert", "value": "{{conversion_funnel.data.find(d => d.status === 'Qualifiziert')?.count || 0}}"},
+            {"name": "Angebot", "value": "{{conversion_funnel.data.find(d => d.status === 'Angebot')?.count || 0}}"},
+            {"name": "Gewonnen", "value": "{{conversion_funnel.data.find(d => d.status === 'Gewonnen')?.count || 0}}"}
+          ]
+        },
+        {
+          "type": "chart",
+          "name": "leads_over_time",
+          "title": "Lead-Entwicklung",
+          "chart_type": "line",
+          "query": "SELECT DATE(created_at) as date, COUNT(*) as count FROM {{Airtable_Leads.data}} WHERE created_at >= DATEADD(CURDATE(), INTERVAL -30 DAY) GROUP BY DATE(created_at) ORDER BY date",
+          "x_axis": "date",
+          "y_axis": "count"
+        },
+        {
+          "type": "chart",
+          "name": "score_distribution",
+          "title": "Score-Verteilung",
+          "chart_type": "histogram",
+          "query": "SELECT score FROM {{Airtable_Leads.data}}",
+          "bins": 10,
+          "x_axis": "score"
+        },
+        {
+          "type": "table",
+          "name": "performance_by_source",
+          "title": "Performance nach Lead-Quelle",
+          "query": "SELECT lead_source, COUNT(*) as total_leads, COUNT(CASE WHEN status = 'Gewonnen' THEN 1 END) as won_leads, (COUNT(CASE WHEN status = 'Gewonnen' THEN 1 END) * 100.0 / COUNT(*)) as conversion_rate, AVG(score) as avg_score FROM {{Airtable_Leads.data}} GROUP BY lead_source ORDER BY conversion_rate DESC",
+          "columns": [
+            {"key": "lead_source", "title": "Quelle"},
+            {"key": "total_leads", "title": "Gesamt"},
+            {"key": "won_leads", "title": "Gewonnen"},
+            {"key": "conversion_rate", "title": "Conversion %", "format": "percentage"},
+            {"key": "avg_score", "title": "Ø Score", "format": "number"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Follow-up Management",
+      "components": [
+        {
+          "type": "stat_card",
+          "name": "due_followups",
+          "title": "Follow-ups heute",
+          "query": "SELECT COUNT(*) as count FROM {{Airtable_Leads.data}} WHERE next_followup = CURDATE()",
+          "value": "{{due_followups.data[0].count}}",
+          "icon": "calendar",
+          "color": "orange"
+        },
+        {
+          "type": "stat_card",
+          "name": "overdue_followups",
+          "title": "Überfällige Follow-ups",
+          "query": "SELECT COUNT(*) as count FROM {{Airtable_Leads.data}} WHERE next_followup < CURDATE() AND status NOT IN ('Gewonnen', 'Verloren')",
+          "value": "{{overdue_followups.data[0].count}}",
+          "icon": "alert-triangle",
+          "color": "red"
+        },
+        {
+          "type": "table",
+          "name": "todays_followups",
+          "title": "Heutige Follow-ups",
+          "query": "SELECT name, company, industry, score, priority, phone, email, notes FROM {{Airtable_Leads.data}} WHERE next_followup = CURDATE() ORDER BY score DESC",
+          "columns": [
+            {"key": "name", "title": "Name"},
+            {"key": "company", "title": "Unternehmen"},
+            {"key": "priority", "title": "Priorität"},
+            {"key": "phone", "title": "Telefon"},
+            {"key": "email", "title": "E-Mail"}
+          ],
+          "row_actions": [
+            {
+              "label": "Anrufen",
+              "action": "open_url",
+              "url": "tel:{{selectedRow.phone}}"
+            },
+            {
+              "label": "E-Mail",
+              "action": "open_url",
+              "url": "mailto:{{selectedRow.email}}"
+            },
+            {
+              "label": "Erledigt",
+              "action": "update_record",
+              "table": "Leads",
+              "updates": {
+                "last_contact": "{{moment().format('YYYY-MM-DD')}}",
+                "next_followup": "{{moment().add(7, 'days').format('YYYY-MM-DD')}}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "calendar",
+          "name": "followup_calendar",
+          "title": "Follow-up Kalender",
+          "query": "SELECT name, company, next_followup as date, priority FROM {{Airtable_Leads.data}} WHERE next_followup IS NOT NULL",
+          "date_field": "date",
+          "title_field": "name",
+          "color_field": "priority"
+        }
+      ]
+    }
+  ],
+  "modals": [
+    {
+      "name": "edit_lead_modal",
+      "title": "Lead bearbeiten",
+      "components": [
+        {
+          "type": "text_input",
+          "name": "edit_name",
+          "label": "Name",
+          "value": "{{all_leads_table.selectedRow.name}}"
+        },
+        {
+          "type": "text_input",
+          "name": "edit_company",
+          "label": "Unternehmen",
+          "value": "{{all_leads_table.selectedRow.company}}"
+        },
+        {
+          "type": "select",
+          "name": "edit_status",
+          "label": "Status",
+          "options": ["Neu", "Kontaktiert", "Qualifiziert", "Angebot", "Verhandlung", "Gewonnen", "Verloren"],
+          "value": "{{all_leads_table.selectedRow.status}}"
+        },
+        {
+          "type": "date_picker",
+          "name": "edit_next_followup",
+          "label": "Nächster Follow-up",
+          "value": "{{all_leads_table.selectedRow.next_followup}}"
+        },
+        {
+          "type": "textarea",
+          "name": "edit_notes",
+          "label": "Notizen",
+          "value": "{{all_leads_table.selectedRow.notes}}"
+        },
+        {
+          "type": "button",
+          "name": "save_lead",
+          "text": "Speichern",
+          "action": "update_airtable_record",
+          "table": "Leads",
+          "record_id": "{{all_leads_table.selectedRow.id}}",
+          "updates": {
+            "name": "{{edit_name.value}}",
+            "company": "{{edit_company.value}}",
+            "status": "{{edit_status.value}}",
+            "next_followup": "{{edit_next_followup.value}}",
+            "notes": "{{edit_notes.value}}"
+          }
+        }
+      ]
+    }
+  ],
+  "styling": {
+    "theme": "professional",
+    "primary_color": "#3B82F6",
+    "secondary_color": "#10B981",
+    "background_color": "#F9FAFB",
+    "text_color": "#111827",
+    "font_family": "Inter, sans-serif"
+  }
+}

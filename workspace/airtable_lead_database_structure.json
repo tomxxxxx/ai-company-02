@@ -1,0 +1,261 @@
+{
+  "base_name": "Lead-Qualifizierungs-MVP",
+  "tables": {
+    "leads": {
+      "name": "🎯 Leads",
+      "fields": [
+        {
+          "name": "Lead ID",
+          "type": "auto_number",
+          "primary": true
+        },
+        {
+          "name": "Name",
+          "type": "single_line_text",
+          "required": true
+        },
+        {
+          "name": "Unternehmen",
+          "type": "single_line_text",
+          "required": true
+        },
+        {
+          "name": "E-Mail",
+          "type": "email",
+          "required": true
+        },
+        {
+          "name": "Telefon",
+          "type": "phone_number"
+        },
+        {
+          "name": "Branche",
+          "type": "single_select",
+          "options": [
+            "Immobilien",
+            "Unternehmensberatung",
+            "Vermögensberatung",
+            "IT-Dienstleister",
+            "Versicherung",
+            "Digitale Agentur",
+            "Handwerk",
+            "Sonstige"
+          ]
+        },
+        {
+          "name": "Firmengröße",
+          "type": "single_select",
+          "options": [
+            "1-5 Mitarbeiter",
+            "6-20 Mitarbeiter",
+            "21-50 Mitarbeiter",
+            "51-200 Mitarbeiter",
+            "200+ Mitarbeiter"
+          ]
+        },
+        {
+          "name": "Jahresumsatz",
+          "type": "single_select",
+          "options": [
+            "< €100k",
+            "€100k - €500k",
+            "€500k - €1M",
+            "€1M - €5M",
+            "€5M+"
+          ]
+        },
+        {
+          "name": "Lead-Quelle",
+          "type": "single_select",
+          "options": [
+            "Website-Formular",
+            "LinkedIn",
+            "XING",
+            "Empfehlung",
+            "Kaltakquise",
+            "Event",
+            "CSV-Import",
+            "Manual"
+          ]
+        },
+        {
+          "name": "Status",
+          "type": "single_select",
+          "options": [
+            "Neu",
+            "Kontaktiert",
+            "Qualifiziert",
+            "Angebot",
+            "Verhandlung",
+            "Gewonnen",
+            "Verloren",
+            "Inaktiv"
+          ]
+        },
+        {
+          "name": "Lead-Score",
+          "type": "formula",
+          "formula": "IF(AND({Branche} = 'Immobilien', {Firmengröße} = '6-20 Mitarbeiter'), 85, IF(AND({Branche} = 'Unternehmensberatung', {Jahresumsatz} = '€1M - €5M'), 90, IF({Branche} = 'Vermögensberatung', 80, IF({Firmengröße} = '21-50 Mitarbeiter', 70, IF({Jahresumsatz} = '€500k - €1M', 65, 50)))))"
+        },
+        {
+          "name": "Priorität",
+          "type": "formula",
+          "formula": "IF({Lead-Score} >= 85, '🔥 Heiß', IF({Lead-Score} >= 70, '⭐ Warm', IF({Lead-Score} >= 50, '📝 Kalt', '❄️ Inaktiv')))"
+        },
+        {
+          "name": "Potenzial €/Monat",
+          "type": "formula",
+          "formula": "IF({Branche} = 'Unternehmensberatung', 2000, IF({Branche} = 'Vermögensberatung', 1000, IF({Branche} = 'Immobilien', 500, IF(OR({Branche} = 'IT-Dienstleister', {Branche} = 'Digitale Agentur'), 300, 200))))"
+        },
+        {
+          "name": "Letzter Kontakt",
+          "type": "date"
+        },
+        {
+          "name": "Nächster Follow-up",
+          "type": "date"
+        },
+        {
+          "name": "Notizen",
+          "type": "long_text"
+        },
+        {
+          "name": "Tags",
+          "type": "multiple_select",
+          "options": [
+            "Pilotprojekt",
+            "Beta-Tester",
+            "Premium-Kunde",
+            "Referral-Partner",
+            "Event-Lead",
+            "Demo-Request"
+          ]
+        },
+        {
+          "name": "Erstellt am",
+          "type": "created_time"
+        },
+        {
+          "name": "Bearbeitet am",
+          "type": "last_modified_time"
+        }
+      ],
+      "views": [
+        {
+          "name": "🔥 Heiße Leads",
+          "type": "grid",
+          "filter": "{Lead-Score} >= 85",
+          "sort": [{"field": "Lead-Score", "direction": "desc"}]
+        },
+        {
+          "name": "📅 Follow-up heute",
+          "type": "grid",
+          "filter": "{Nächster Follow-up} = TODAY()",
+          "sort": [{"field": "Priorität", "direction": "desc"}]
+        },
+        {
+          "name": "💰 Revenue Pipeline",
+          "type": "grid",
+          "filter": "OR({Status} = 'Qualifiziert', {Status} = 'Angebot', {Status} = 'Verhandlung')",
+          "sort": [{"field": "Potenzial €/Monat", "direction": "desc"}]
+        }
+      ]
+    },
+    "follow_up_templates": {
+      "name": "📧 Follow-up Templates",
+      "fields": [
+        {
+          "name": "Template Name",
+          "type": "single_line_text",
+          "primary": true
+        },
+        {
+          "name": "Branche",
+          "type": "link_to_another_record",
+          "linked_table": "leads",
+          "linked_field": "Branche"
+        },
+        {
+          "name": "Sequenz-Schritt",
+          "type": "number"
+        },
+        {
+          "name": "Betreff",
+          "type": "single_line_text"
+        },
+        {
+          "name": "E-Mail Text",
+          "type": "long_text"
+        },
+        {
+          "name": "Follow-up nach (Tage)",
+          "type": "number"
+        },
+        {
+          "name": "Aktiv",
+          "type": "checkbox",
+          "default": true
+        }
+      ]
+    },
+    "activities": {
+      "name": "📊 Aktivitäten",
+      "fields": [
+        {
+          "name": "Aktivität ID",
+          "type": "auto_number",
+          "primary": true
+        },
+        {
+          "name": "Lead",
+          "type": "link_to_another_record",
+          "linked_table": "leads"
+        },
+        {
+          "name": "Typ",
+          "type": "single_select",
+          "options": [
+            "E-Mail gesendet",
+            "E-Mail erhalten",
+            "Anruf getätigt",
+            "Anruf erhalten",
+            "Meeting",
+            "Demo",
+            "Angebot",
+            "Notiz"
+          ]
+        },
+        {
+          "name": "Datum",
+          "type": "date"
+        },
+        {
+          "name": "Beschreibung",
+          "type": "long_text"
+        },
+        {
+          "name": "Erstellt am",
+          "type": "created_time"
+        }
+      ]
+    }
+  },
+  "automations": [
+    {
+      "name": "Neuer Lead → Follow-up planen",
+      "trigger": "Record created in Leads",
+      "actions": [
+        "Update record: Set 'Nächster Follow-up' to 1 day from now",
+        "Send email notification to sales team"
+      ]
+    },
+    {
+      "name": "Follow-up überfällig → Reminder",
+      "trigger": "Daily at 9:00 AM",
+      "condition": "'Nächster Follow-up' is before today",
+      "actions": [
+        "Send email reminder to assigned user"
+      ]
+    }
+  ]
+}

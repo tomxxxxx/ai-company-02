@@ -1,0 +1,7 @@
+Name,Unternehmen,E-Mail,Telefon,Branche,Firmengröße,Jahresumsatz,Lead-Quelle,Notizen
+"Max Mustermann","Mustermann Immobilien","max@mustermann-immo.de","+49 40 123456","Immobilien","6-20 Mitarbeiter","€500k - €1M","CSV-Import","Pilotprojekt - Immobilienmakler Hamburg"
+"Dr. Sarah Weber","Weber Consulting","s.weber@weber-consulting.de","+49 89 234567","Unternehmensberatung","21-50 Mitarbeiter","€1M - €5M","CSV-Import","Pilotprojekt - Strategieberatung München"
+"Thomas Fischer","Fischer Wealth","t.fischer@fischer-wealth.de","+49 69 345678","Vermögensberatung","6-20 Mitarbeiter","€500k - €1M","CSV-Import","Pilotprojekt - Private Banking Frankfurt"
+"Anna Schmidt","TechSolutions GmbH","a.schmidt@techsolutions.de","+49 30 456789","IT-Dienstleister","21-50 Mitarbeiter","€1M - €5M","CSV-Import","Pilotprojekt - IT-Services Berlin"
+"Michael Braun","Creative Digital","m.braun@creative-digital.de","+49 221 567890","Digitale Agentur","6-20 Mitarbeiter","€500k - €1M","CSV-Import","Pilotprojekt - Digitalagentur Köln"
+"Julia Neumann","Neumann Versicherungen","j.neumann@neumann-vers.de","+49 711 678901","Versicherung","1-5 Mitarbeiter","€100k - €500k","CSV-Import","Pilotprojekt - Versicherungsmakler Stuttgart"
