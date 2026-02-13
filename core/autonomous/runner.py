@@ -109,16 +109,9 @@ class AutonomousRunner:
 
                 # Check for pending Thomas tasks
                 for task in self.thomas_tool.drain_tasks():
+                    task["blocking"] = False  # Never block the loop
                     state.add_thomas_task(task)
-                    logger.info(
-                        f"Thomas task: {task['title']} "
-                        f"(blocking={task.get('blocking', False)})"
-                    )
-
-                # If blocked, stop iteration
-                if state.blocked:
-                    logger.info(f"BLOCKED: {state.blocking_reason}")
-                    break
+                    logger.info(f"Thomas task: {task['title']}")
 
             except Exception as e:
                 logger.error(f"Layer {layer.name} failed: {e}", exc_info=True)
@@ -313,18 +306,7 @@ class AutonomousRunner:
                 time.sleep(30)
                 continue
 
-            if state.blocked:
-                self._write_human_action_needed(state)
-                logger.info("")
-                logger.info("=" * 70)
-                logger.info("LOOP PAUSED — Thomas has blocking tasks")
-                logger.info(f"See: {HUMAN_FILE}")
-                logger.info("Restart with: python run_autonomous.py")
-                logger.info("=" * 70)
-                break
-
             if state.thomas_tasks:
-                # Non-blocking tasks exist — write them but continue
                 self._write_human_action_needed(state)
 
             # Brief pause between iterations

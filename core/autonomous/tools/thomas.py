@@ -27,11 +27,11 @@ class CreateThomasTaskTool(Tool):
     def description(self) -> str:
         return (
             "Create a task for Thomas (the human operator). "
-            "Use blocking=true ONLY if the autonomous loop cannot continue "
-            "without Thomas completing this task first. "
-            "Use blocking=false for tasks Thomas should do when he has time. "
+            "Tasks are always non-blocking — the loop continues regardless. "
+            "Thomas will handle tasks when he has time. "
             "Thomas has ~1h/day, is a developer (not a salesperson), "
-            "and cannot appear publicly (Konkurrenzklausel)."
+            "and cannot appear publicly (Konkurrenzklausel). "
+            "Do NOT create tasks for things you can do yourself."
         )
 
     @property

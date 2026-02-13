@@ -32,7 +32,6 @@ Iteration #6 brach wegen API Rate Limit ab. **Kein Systemfehler** — Rate-Limit
 
 - Iterationen #3 und #5 liefen erfolgreich alle 6 Ebenen durch — die Architektur funktioniert.
 - Evaluationsebene hat jetzt Commit/Revert/Continue-Empfehlungen — wurde in Iteration #5 vom System selbst implementiert.
-- Das System bewertet sich selbst zu positiv (immer 5/5 Sterne). Bewertungen sollen realistisch und kritisch sein.
 - Die Leitebene soll erledigte Einträge in diesem Briefing aktiv löschen.
 
 ### [2026-02-12] Thomas' persönliche Kontakte
