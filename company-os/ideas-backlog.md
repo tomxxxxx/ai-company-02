@@ -21,8 +21,8 @@ Jede Idee hat:
 
 ## Aktive Ideen
 
-### [system | hoch | 2026-02-13] Core-Module Legacy-Analyse fortsetzen
-Iteration #3 wurde bei der Core-Module-Analyse unterbrochen. Identifizieren welche Module in core/ und agents/ noch aktiv genutzt werden vs. Legacy-Code der entfernt werden kann.
+### [system | hoch | 2026-02-13] Legacy-Analyse aus Iteration #6 direkt fortsetzen
+Iteration #6 hatte vollständige, detaillierte Pläne für Core-Module Legacy-Analyse (7 konkrete Aktionen definiert), wurde aber durch Rate-Limit bei der Ausführung unterbrochen. Die Planungsarbeit ist vollständig vorhanden und kann direkt ausgeführt werden ohne neue Planung.
 
 ### [system | mittel | 2026-02-12] REVERT-Funktionalität implementieren
 Das neue Evaluations-System kann REVERT empfehlen, aber der Runner loggt nur ein Warning. Git-Revert-Funktionalität für fehlerhafte Iterationen nachrüsten.
@@ -42,8 +42,8 @@ Mittelfristig: HTTP-Requests, Email-Versand, Web-Scraping. Aber erst wenn System
 ### [experiment | niedrig | 2026-02-12] Neue Produkt-Hypothesen evaluieren
 5 SaaS-Ideen wurden bereits analysiert (TOP_5_SAAS_IDEAS.json). Sobald das System reif genug ist, können wir systematisch neue Experimente starten.
 
+### [system | mittel | 2026-02-13] Rate-Limit-Retry Effektivität analysieren
+Trotz implementiertem Rate-Limit-Retry scheiterte Iteration #6 an Rate-Limits. Möglicherweise sind die Token-Limits zu niedrig für große Analyse-Tasks. Strategie für Token-intensive Operationen entwickeln.
+
 ### [system | niedrig | 2026-02-13] Robustheit-Features erweitern
 Nach erfolgreichem Rate-Limit-Retry: weitere Robustheit-Features wie automatische Backup-Erstellung vor riskanten Operationen, System-Health-Monitoring, oder Rollback-Mechanismen für fehlerhafte Commits.
-
-### [system | hoch | 2026-02-13] Iteration #6 Legacy-Analyse fortsetzen
-Iteration #6 hatte vollständige, detaillierte Pläne für Core-Module Legacy-Analyse, wurde aber durch Rate-Limit bei der Ausführung unterbrochen. Die Planungsarbeit ist nicht verloren und kann direkt fortgesetzt werden.
