@@ -190,35 +190,21 @@ class AutonomousRunner:
         """
         if not evaluation_output:
             return {"action": "unknown", "reason": "No evaluation output"}
-            
-        output_lower = evaluation_output.lower()
-        
-        # Look for the specific format: **EMPFEHLUNG: ACTION**
-        if "**empfehlung: commit**" in output_lower:
-            # Extract reason (text after the recommendation line)
-            lines = evaluation_output.split('\n')
-            for i, line in enumerate(lines):
-                if "**empfehlung: commit**" in line.lower():
-                    reason = line.split('**empfehlung: commit**')[1].strip(' -')
-                    return {"action": "commit", "reason": reason or "Evaluation recommended commit"}
-            return {"action": "commit", "reason": "Evaluation recommended commit"}
-            
-        elif "**empfehlung: revert**" in output_lower:
-            lines = evaluation_output.split('\n')
-            for i, line in enumerate(lines):
-                if "**empfehlung: revert**" in line.lower():
-                    reason = line.split('**empfehlung: revert**')[1].strip(' -')
-                    return {"action": "revert", "reason": reason or "Evaluation recommended revert"}
-            return {"action": "revert", "reason": "Evaluation recommended revert"}
-            
-        elif "**empfehlung: continue**" in output_lower:
-            lines = evaluation_output.split('\n')
-            for i, line in enumerate(lines):
-                if "**empfehlung: continue**" in line.lower():
-                    reason = line.split('**empfehlung: continue**')[1].strip(' -')
-                    return {"action": "continue", "reason": reason or "Evaluation recommended continue"}
-            return {"action": "continue", "reason": "Evaluation recommended continue"}
-        
+
+        # Search line-by-line, case-insensitive
+        for line in evaluation_output.split('\n'):
+            lower = line.lower()
+            for action in ["commit", "revert", "continue"]:
+                marker = f"**empfehlung: {action}**"
+                if marker in lower:
+                    # Extract reason: everything after the marker
+                    idx = lower.index(marker) + len(marker)
+                    reason = line[idx:].strip(' -–—:')
+                    return {
+                        "action": action,
+                        "reason": reason or f"Evaluation recommended {action}",
+                    }
+
         return {"action": "unknown", "reason": "No clear recommendation found"}
 
     def _write_human_action_needed(self, state: IterationState):

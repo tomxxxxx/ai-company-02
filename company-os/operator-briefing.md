@@ -33,6 +33,17 @@ Wenn Thomas-Tasks in `HUMAN_ACTION_NEEDED.md` durch spätere Iterationen **obsol
 
 4. **`--max-iterations N`**: Neuer CLI-Parameter zum Begrenzen der Iterationsanzahl.
 
+### [2026-02-13] Feedback: Iteration #7 — Parser-Bug und Junk-Dateien
+
+Iteration #7 lief **10 Mal durch alle 6 Ebenen**, wurde aber nie als abgeschlossen gespeichert, weil der Recommendation-Parser im Runner crashte. **Dieser Bug wurde vom Operator gefixt**. Keine Fehlersuche nötig.
+
+Probleme:
+- **Junk-Dateien im Root**: Das System hat ~10 Analyse-Dokumente im Root erstellt (ITERATION_7_*.md, LEGACY_*.md, TOKEN_EFFICIENT_STRATEGIES.md, temp_module_analysis.md) und ein `docs/` Verzeichnis. Diese Dateien sind Müll und sollen gelöscht werden.
+- **Wiederholte Arbeit**: Weil die Iteration nie gespeichert wurde, hat das System 10 Mal dieselbe Legacy-Analyse gemacht. Die Leitebene konnte die vorherige Iteration nicht sehen.
+- **Selbstbeschäftigung**: Das System hat mehrfach den Planning-Prompt überarbeitet und Analyse-Dokumente geschrieben, statt echte Arbeit zu machen. Dokumentation schreiben ist KEINE produktive Iteration. Dateien analysieren und dann eine Markdown-Zusammenfassung schreiben ist Zeitverschwendung. Stattdessen: **Probleme direkt lösen** (z.B. Legacy-Dateien löschen statt sie zu dokumentieren).
+
+Priorität: Junk-Dateien aufräumen, dann mit echten Verbesserungen weitermachen.
+
 ### [2026-02-12] Thomas' persönliche Kontakte
 
 Thomas' private Kontakte werden NICHT für Business genutzt.
