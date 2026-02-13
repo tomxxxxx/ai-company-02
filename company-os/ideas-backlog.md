@@ -42,8 +42,8 @@ Mittelfristig: HTTP-Requests, Email-Versand, Web-Scraping. Aber erst wenn System
 ### [experiment | niedrig | 2026-02-12] Neue Produkt-Hypothesen evaluieren
 5 SaaS-Ideen wurden bereits analysiert (TOP_5_SAAS_IDEAS.json). Sobald das System reif genug ist, können wir systematisch neue Experimente starten.
 
-### [system | niedrig | 2026-02-13] Rate-Limit-Retry Effektivität testen
-Thomas hat Rate-Limit-Retry mit exponentiellem Backoff implementiert (60s, 120s, 240s, 480s, 960s). Testen ob das die Rate-Limit-Probleme aus Iteration #6 behebt, oder ob zusätzliche Token-Management-Strategien nötig sind.
+### [system | mittel | 2026-02-13] Obsolete Thomas-Tasks bereinigen
+Thomas-Tasks in HUMAN_ACTION_NEEDED.md werden durch Iterationen oft obsolet (System löst Problem selbst, oder Aufgabe nicht mehr relevant). Leitebene soll veraltete Tasks aktiv löschen statt sie ansammeln zu lassen. Reduziert Verwirrung.
 
 ### [system | niedrig | 2026-02-13] Robustheit-Features erweitern
 Nach erfolgreichem Rate-Limit-Retry: weitere Robustheit-Features wie automatische Backup-Erstellung vor riskanten Operationen, System-Health-Monitoring, oder Rollback-Mechanismen für fehlerhafte Commits.
