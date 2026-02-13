@@ -21,11 +21,11 @@ Jede Idee hat:
 
 ## Aktive Ideen
 
-### [system | hoch | 2026-02-13] Token-bewusste Legacy-Analyse (Mini-Iteration)
-Iteration #6 scheiterte an Token-Limits trotz perfekter Pläne. Statt 7 Aktionen: Mini-Iteration mit nur 1-2 Legacy-Dateien analysieren (z.B. nur core/agent.py und core/orchestrator.py), Ergebnisse dokumentieren, dann in nächster Iteration fortsetzen. Beweist token-effiziente Arbeitsweise.
-
 ### [system | hoch | 2026-02-13] Planungsebene Token-Awareness einbauen
 Die Planungsebene muss lernen, Tasks unter Token-Limits zu planen. Statt 7 Aktionen → max 3 Aktionen pro Iteration. Oder sogar Task-Splitting: "Analysiere nur 2 Dateien, dokumentiere Ergebnisse, nächste Iteration macht weiter". Verhindert Rate-Limit-Failures. DRINGEND nach Iteration #6 Failure.
+
+### [system | hoch | 2026-02-13] Token-bewusste Legacy-Analyse (Mini-Iteration)
+Nach Planungsebene-Fix: Mini-Iteration mit nur 1-2 Legacy-Dateien analysieren (z.B. nur core/agent.py und core/orchestrator.py), Ergebnisse dokumentieren, dann in nächster Iteration fortsetzen. Beweist token-effiziente Arbeitsweise.
 
 ### [system | hoch | 2026-02-12] Dokumentation konsolidieren
 company_state.json enthält veraltete Felder. ONBOARDING.md wurde gestrafft aber referenziert noch alte Strukturen. Saubere Dokumentation = bessere Iterationen.
