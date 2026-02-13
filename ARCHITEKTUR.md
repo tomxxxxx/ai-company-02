@@ -36,20 +36,23 @@ Der entscheidende Vorteil: **Compounding**. Jede Entscheidung, jeder Fehler, jed
 
 ## Was wir JETZT tun müssen, um das Unternehmen zu sein das gewinnt
 
-### 1. Die beste Entscheidungsarchitektur bauen
-Das Unternehmen das die besten Entscheidungen am schnellsten trifft, gewinnt. Nicht das mit dem meisten Code oder den meisten Features. **Die Architektur IST das Produkt der ersten Phase.**
+### Der CEO muss fähig genug sein, seine eigenen Lücken zu erkennen und zu schließen.
 
-### 2. Institutionelles Gedächtnis aufbauen
-Jede Entscheidung des CEO, jeder Abteilungs-Report, jedes Ergebnis muss gespeichert und durchsuchbar sein. Das ist der Compound-Interest-Mechanismus: Iteration #500 muss Zugriff auf die Erkenntnisse aus Iteration #1 haben.
+Die Architektur schreibt NICHT vor, welche Abteilungen es gibt, wie das Gedächtnis funktioniert, oder welche Märkte verfolgt werden. Sie **ermöglicht** dem CEO, das alles selbst zu entscheiden.
 
-### 3. Selbstverbesserung einbauen
-Das System muss seine EIGENE Architektur verbessern können. Nicht nur Produkte bauen — sondern sich selbst besser machen. Der CEO muss erkennen können: "Meine Entscheidungsqualität ist schlecht in Bereich X, ich brauche einen besseren Prozess."
+Beispiele für CEO-Selbstdiagnose:
+- "Ich habe keine Marktintelligenz" → CEO gründet eine Research-Abteilung
+- "Mein Gedächtnis skaliert nicht" → CEO beauftragt eine Abteilung, ein Retrieval-System zu bauen
+- "Ich habe ein Produkt aber keine Kunden" → CEO gründet eine Sales-Abteilung
+- "Meine Entscheidungsqualität ist schlecht in Bereich X" → CEO holt Consultant, ändert seinen Prozess
+- "Ich verbrenne Geld ohne Ergebnis" → CEO stoppt Abteilungen, hinterfragt seine Strategie
+- "Die Welt da draußen verändert sich und ich bekomme nichts davon mit" → CEO beauftragt Marktbeobachtung
 
-### 4. Anpassungsfähig bleiben
-Wir wissen nicht, was das Unternehmen in 2 Jahren tut. Der aktuelle Slack-Bot ist irrelevant. Was zählt: Kann das System neue Chancen erkennen, evaluieren und ergreifen — schneller als jeder Mensch? Die Architektur muss produktagnostisch sein.
+**Die Architektur muss genau zwei Dinge leisten:**
+1. Dem CEO die Fähigkeit geben, seine eigenen Limitierungen zu beobachten
+2. Dem CEO die Werkzeuge geben, um Maßnahmen auf den Weg zu bringen (Abteilungen gründen, Aufträge erteilen, Berater konsultieren)
 
-### 5. Kompatibel mit besseren Modellen sein
-In 2 Jahren sind die LLMs dramatisch besser. Die Architektur muss so gebaut sein, dass ein besseres Modell sofort bessere Ergebnisse liefert — ohne Umbau. Saubere Abstraktion zwischen "Denken" (LLM) und "Handeln" (Tools).
+Alles andere — welche Abteilungen, welche Produkte, welche Strategie — entscheidet der CEO selbst. Die Architektur ist der Rahmen, nicht der Inhalt.
 
 ## Zielhierarchie
 
@@ -100,6 +103,7 @@ Der CEO ist der einzige Agent, der dauerhaft läuft. Er ist KEIN Ausführer — 
 **Was der CEO tut:**
 - Liest den Unternehmensstand (Kapital, MRR, Produkte, Abteilungs-Reports)
 - Vergleicht IST mit SOLL (Vision → Langfristig → Mittelfristig → Kurzfristig)
+- **Diagnostiziert eigene Lücken**: Was fehlt dem Unternehmen? Was kann ich nicht, was ich können müsste?
 - Entscheidet: Was muss passieren? Welche Abteilung braucht was?
 - Erstellt/modifiziert/schließt Abteilungen
 - Gibt Abteilungen **Aufträge** (klar formuliert, mit Budget und Erfolgskriterium)
@@ -111,6 +115,7 @@ Der CEO ist der einzige Agent, der dauerhaft läuft. Er ist KEIN Ausführer — 
 - Selbst Dateien erstellen
 - Mikromanagement der Abteilungen
 - Jede Iteration alle Abteilungen durchlaufen
+- Lösungen für Probleme vorprogrammiert bekommen — er muss sie **selbst finden**
 
 **CEO-Zyklus:**
 ```
@@ -382,12 +387,14 @@ Iteration 10000: CEO operiert mit proprietärem Wissen das niemand sonst hat
 
 Jedes menschliche Unternehmen verliert Wissen wenn Key-People gehen. Dieses System verliert **nie** Wissen. Das ist exponentieller Vorteil über Zeit.
 
-### Wie wir das implementieren
+### Minimal-Implementierung (Tag 1)
 
 - **Entscheidungslog**: Jede CEO-Entscheidung + Begründung + Ergebnis → `state/ceo_log.jsonl`
-- **Lessons-Learned-DB**: Explizite Erkenntnisse die der CEO aus Ergebnissen zieht
-- **Pattern-Erkennung**: CEO bekommt bei Entscheidungen relevante historische Entscheidungen als Kontext
 - **Fehler-Register**: Fehler die NIE wiederholt werden dürfen (z.B. "lösche nie system/")
+
+### Was der CEO selbst verbessern muss (nicht wir)
+
+Wenn das Gedächtnis nicht skaliert (zu viele Einträge für den Context), muss der **CEO selbst** das erkennen und eine Lösung in Auftrag geben — z.B. eine Abteilung beauftragen, ein Retrieval-System, Zusammenfassungen, oder eine Wissensdatenbank zu bauen. Wir bauen das nicht rein — wir geben dem CEO die Fähigkeit, es sich selbst zu bauen.
 
 ## Was dieses System besser macht als v1
 
