@@ -78,19 +78,34 @@ class Department:
     def execute(self) -> dict:
         """Execute the assignment and return a report dict."""
         prompt = DEPARTMENT_PROMPT.format(name=self.name, objective=self.objective)
+        prompt += f"\n\nDein Budget: ${self.budget_usd:.2f}. Arbeite effizient."
 
         user_message = f"Auftrag: {self.objective}"
         if self.context:
             user_message += f"\n\nKontext:\n{self.context}"
 
-        logger.info(f"Department '{self.name}' starting: {self.objective[:100]}")
+        logger.info(f"Department '{self.name}' starting (budget ${self.budget_usd}): {self.objective[:100]}")
+
+        # Budget-aware execution: track cost per turn, abort if exceeded
+        self._accumulated_cost = 0.0
+        self._budget_exceeded = False
+
+        def budget_checked_executor(tool_name: str, tool_input: dict) -> str:
+            if self._budget_exceeded:
+                return "[BUDGET EXCEEDED] Abteilung wurde gestoppt — Budget überschritten."
+            return self.registry.execute(tool_name, tool_input)
+
+        # Limit turns based on budget: ~$0.03-0.05 per turn, cap conservatively
+        estimated_cost_per_turn = 0.03
+        budget_max_turns = max(3, int(self.budget_usd / estimated_cost_per_turn))
+        effective_max_turns = min(budget_max_turns, DEFAULT_DEPARTMENT_MAX_TURNS)
 
         result = self.llm.run_agent_loop(
             system_prompt=prompt,
             user_message=user_message,
             tools=self.registry.to_claude_format(),
-            tool_executor=self.registry.execute,
-            max_turns=DEFAULT_DEPARTMENT_MAX_TURNS,
+            tool_executor=budget_checked_executor,
+            max_turns=effective_max_turns,
         )
 
         cost = round(
@@ -99,10 +114,16 @@ class Department:
             4,
         )
 
+        budget_status = "completed"
+        if cost > self.budget_usd:
+            budget_status = "budget_exceeded"
+            logger.warning(f"Department '{self.name}' exceeded budget: ${cost} > ${self.budget_usd}")
+
         report = {
             "department": self.name,
             "objective": self.objective,
-            "status": "completed",
+            "status": budget_status,
+            "budget_usd": self.budget_usd,
             "output": result["text"],
             "tool_calls_count": len(result["tool_calls"]),
             "tool_calls": [

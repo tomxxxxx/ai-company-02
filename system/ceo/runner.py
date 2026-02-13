@@ -12,7 +12,7 @@ from system.tools.git import GitStatusTool, GitCommitTool
 from system.tools.shell import RunCommandTool
 from system.tools.ceo_tools import RunDepartmentTool, ConsultExpertTool
 from system.config import (
-    SYSTEM_PROTECTED_PATHS,
+    CEO_PROTECTED_PATHS,
     CEO_MAX_TURNS,
     COST_PER_INPUT_TOKEN,
     COST_PER_OUTPUT_TOKEN,
@@ -38,10 +38,10 @@ class CEO:
     def _build_registry(self) -> ToolRegistry:
         registry = ToolRegistry()
 
-        # Filesystem — CEO can write everywhere except system/
+        # Filesystem — CEO can modify everything except bootstrap files
         registry.register(ReadFileTool(self.workspace_root))
-        registry.register(WriteFileTool(self.workspace_root, protected_prefixes=SYSTEM_PROTECTED_PATHS))
-        registry.register(EditFileTool(self.workspace_root, protected_prefixes=SYSTEM_PROTECTED_PATHS))
+        registry.register(WriteFileTool(self.workspace_root, protected_prefixes=CEO_PROTECTED_PATHS))
+        registry.register(EditFileTool(self.workspace_root, protected_prefixes=CEO_PROTECTED_PATHS))
         registry.register(ListDirectoryTool(self.workspace_root))
 
         # Shell — for quick checks
@@ -143,6 +143,12 @@ class CEO:
         # Update company state (deduct costs)
         self._update_state(total_cost)
 
+        # Auto-commit any system/ changes (audit trail)
+        self._auto_commit_system_changes()
+
+        # Archive processed department reports
+        self._archive_reports()
+
         logger.info(f"CEO cycle complete. Cost: ${total_cost}")
 
         return {
@@ -202,6 +208,50 @@ class CEO:
         state["cycle_count"] = state.get("cycle_count", 0) + 1
 
         state_file.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    def _auto_commit_system_changes(self):
+        """If CEO modified system/ files, auto-commit them for audit trail."""
+        import subprocess
+        try:
+            result = subprocess.run(
+                ["git", "diff", "--name-only", "system/"],
+                cwd=str(self.workspace_root),
+                capture_output=True, text=True, timeout=10,
+            )
+            # Also check for untracked files in system/
+            untracked = subprocess.run(
+                ["git", "ls-files", "--others", "--exclude-standard", "system/"],
+                cwd=str(self.workspace_root),
+                capture_output=True, text=True, timeout=10,
+            )
+            changed = (result.stdout.strip() + "\n" + untracked.stdout.strip()).strip()
+            if changed:
+                files = [f for f in changed.split("\n") if f.strip()]
+                subprocess.run(
+                    ["git", "add"] + files,
+                    cwd=str(self.workspace_root), timeout=10,
+                )
+                msg = f"[auto] CEO modified system/: {', '.join(files)}"
+                subprocess.run(
+                    ["git", "commit", "-m", msg],
+                    cwd=str(self.workspace_root), timeout=10,
+                )
+                logger.info(f"Auto-committed system/ changes: {files}")
+        except Exception as e:
+            logger.warning(f"Auto-commit of system/ changes failed: {e}")
+
+    def _archive_reports(self):
+        """Move processed department reports to archive."""
+        reports_dir = self.workspace_root / "state" / "reports"
+        archive_dir = reports_dir / "archive"
+        if not reports_dir.exists():
+            return
+        archive_dir.mkdir(parents=True, exist_ok=True)
+        for f in reports_dir.glob("*.json"):
+            try:
+                f.rename(archive_dir / f.name)
+            except Exception as e:
+                logger.warning(f"Failed to archive report {f.name}: {e}")
 
     def _get_cycle_count(self) -> int:
         state_file = self.workspace_root / "state" / "company.json"
