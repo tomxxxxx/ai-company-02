@@ -90,6 +90,12 @@ def main():
         action="store_true",
         help="Enable debug-level logging",
     )
+    parser.add_argument(
+        "--max-iterations",
+        type=int,
+        default=0,
+        help="Stop after N iterations (default: 0 = unlimited)",
+    )
 
     args = parser.parse_args()
     setup_logging(verbose=args.verbose)
@@ -97,6 +103,8 @@ def main():
     logger = logging.getLogger(__name__)
     logger.info("AI Automation Lab — Autonomous Loop")
     logger.info(f"Mode: {'single iteration' if args.single else 'continuous'}")
+    if args.max_iterations > 0:
+        logger.info(f"Max iterations: {args.max_iterations}")
 
     try:
         runner = AutonomousRunner(delay_between_iterations=args.delay)
@@ -107,7 +115,7 @@ def main():
             if state.blocked:
                 logger.info(f"Blocked: {state.blocking_reason}")
         else:
-            runner.run_continuous()
+            runner.run_continuous(max_iterations=args.max_iterations)
 
     except KeyboardInterrupt:
         logger.info("Shutdown requested. Bye.")

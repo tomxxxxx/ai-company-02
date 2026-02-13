@@ -117,6 +117,21 @@ class GitCommitTool(Tool):
             if commit_result.returncode != 0:
                 return f"[ERROR] git commit failed: {commit_result.stderr}"
 
-            return f"Committed: {message}\n{commit_result.stdout.strip()}"
+            # Push
+            push_result = subprocess.run(
+                "git push",
+                shell=True,
+                cwd=str(self.workspace_root),
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            push_status = ""
+            if push_result.returncode != 0:
+                push_status = f"\n[WARNING] git push failed: {push_result.stderr}"
+            else:
+                push_status = "\nPushed to remote."
+
+            return f"Committed: {message}\n{commit_result.stdout.strip()}{push_status}"
         except Exception as e:
             return f"[ERROR] git commit failed: {e}"

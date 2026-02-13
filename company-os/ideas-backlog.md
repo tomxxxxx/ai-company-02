@@ -24,8 +24,8 @@ Jede Idee hat:
 ### [system | hoch | 2026-02-13] Core-Module Legacy-Analyse fortsetzen
 Iteration #3 wurde bei der Core-Module-Analyse unterbrochen. Identifizieren welche Module in core/ und agents/ noch aktiv genutzt werden vs. Legacy-Code der entfernt werden kann.
 
-### [system | hoch | 2026-02-13] Evaluations-Prompt erweitern
-Thomas' neues Requirement: Evaluationsebene soll Commit/Revert/Continue-Empfehlungen aussprechen. Prompt anpassen und ggf. Runner erweitern für automatisierte Qualitätskontrolle.
+### [system | mittel | 2026-02-12] REVERT-Funktionalität implementieren
+Das neue Evaluations-System kann REVERT empfehlen, aber der Runner loggt nur ein Warning. Git-Revert-Funktionalität für fehlerhafte Iterationen nachrüsten.
 
 ### [system | hoch | 2026-02-12] Dokumentation konsolidieren
 company_state.json enthält veraltete Felder. ONBOARDING.md wurde gestrafft aber referenziert noch alte Strukturen. Saubere Dokumentation = bessere Iterationen.

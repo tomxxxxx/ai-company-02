@@ -11,6 +11,7 @@ Handles the multi-turn tool-use pattern:
 import os
 import json
 import logging
+import time
 from typing import Callable, Optional
 
 logger = logging.getLogger(__name__)
@@ -108,7 +109,7 @@ class ToolUseClient:
                 if tools:
                     kwargs["tools"] = tools
 
-                response = self._client.messages.create(**kwargs)
+                response = self._call_with_retry(kwargs)
             except Exception as e:
                 logger.error(f"Claude API error on turn {turn}: {e}")
                 raise
@@ -187,3 +188,32 @@ class ToolUseClient:
             "input_tokens": total_input_tokens,
             "output_tokens": total_output_tokens,
         }
+
+    def _call_with_retry(
+        self,
+        kwargs: dict,
+        max_retries: int = 5,
+        initial_wait: float = 60.0,
+    ):
+        """
+        Call Claude API with retry on rate-limit (429) and server errors (5xx).
+        Uses exponential backoff: 60s, 120s, 240s, 480s, 960s.
+        """
+        for attempt in range(max_retries + 1):
+            try:
+                return self._client.messages.create(**kwargs)
+            except Exception as e:
+                error_str = str(e)
+                is_rate_limit = "429" in error_str or "rate_limit" in error_str.lower()
+                is_server_error = any(f"{code}" in error_str for code in [500, 502, 503, 529])
+                is_overloaded = "overloaded" in error_str.lower()
+
+                if (is_rate_limit or is_server_error or is_overloaded) and attempt < max_retries:
+                    wait_time = initial_wait * (2 ** attempt)
+                    logger.warning(
+                        f"API error (attempt {attempt + 1}/{max_retries + 1}): "
+                        f"{error_str[:200]}. Retrying in {wait_time:.0f}s..."
+                    )
+                    time.sleep(wait_time)
+                else:
+                    raise

@@ -276,9 +276,12 @@ class AutonomousRunner:
         HUMAN_FILE.write_text("\n".join(lines), encoding="utf-8")
         logger.info(f"Wrote HUMAN_ACTION_NEEDED.md ({len(blocking)} blocking, {len(non_blocking)} non-blocking)")
 
-    def run_continuous(self):
+    def run_continuous(self, max_iterations: int = 0):
         """
         Main entry point: run iterations continuously until blocked.
+
+        Args:
+            max_iterations: Stop after this many iterations. 0 = unlimited.
 
         This is the heart of the autonomous company.
         """
@@ -286,12 +289,18 @@ class AutonomousRunner:
         logger.info("AUTONOMOUS LOOP STARTED")
         logger.info(f"Workspace: {WORKSPACE_ROOT}")
         logger.info(f"Delay between iterations: {self.delay}s")
+        if max_iterations > 0:
+            logger.info(f"Max iterations: {max_iterations}")
         logger.info("=" * 70)
 
         iteration_number = 0
 
         while True:
             iteration_number += 1
+
+            if max_iterations > 0 and iteration_number > max_iterations:
+                logger.info(f"\nMax iterations ({max_iterations}) reached. Stopping loop.")
+                break
 
             try:
                 state = self.run_iteration()
