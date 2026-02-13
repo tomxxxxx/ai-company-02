@@ -24,8 +24,7 @@ Jede Idee hat:
 ### [system | mittel | 2026-02-13] Token-bewusste Legacy-Analyse (Mini-Iteration)
 Nach Planungsebene-Fix: Mini-Iteration mit nur 1-2 Legacy-Dateien analysieren (z.B. nur core/agent.py und core/orchestrator.py), Ergebnisse dokumentieren, dann in nächster Iteration fortsetzen. Beweist token-effiziente Arbeitsweise.
 
-### [system | hoch | 2026-02-12] Dokumentation konsolidieren
-company_state.json enthält veraltete Felder. ONBOARDING.md wurde gestrafft aber referenziert noch alte Strukturen. Saubere Dokumentation = bessere Iterationen.
+
 
 ### [system | mittel | 2026-02-12] REVERT-Funktionalität implementieren
 Das neue Evaluations-System kann REVERT empfehlen, aber der Runner loggt nur ein Warning. Git-Revert-Funktionalität für fehlerhafte Iterationen nachrüsten.
@@ -47,3 +46,6 @@ Nach dem Erfolg von Iteration #8 sollte das System lernen, seine eigene Performa
 
 ### [system | niedrig | 2026-02-13] Robustheit-Features erweitern
 Nach erfolgreichem Rate-Limit-Retry: weitere Robustheit-Features wie automatische Backup-Erstellung vor riskanten Operationen, System-Health-Monitoring, oder Rollback-Mechanismen für fehlerhafte Commits.
+
+### [produkt | hoch | 2026-02-13] Slack-Bot Entwicklung fortsetzen
+Nach System-Stabilisierung ist es Zeit für Produktentwicklung. TaskMaster Slack-Bot hat Potenzial: HTTP-Migration ist vorbereitet, Dashboard-Code existiert, nur Testing/Deployment fehlt. Nächster Schritt: lokale Tests der HTTP-Endpoints, dann Thomas kann URLs konfigurieren.
