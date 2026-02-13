@@ -29,7 +29,7 @@ Jede Ebene ist ein Claude-API-Call mit Tool-Use. Jede kann Thomas-Tasks erstelle
 
 ## AKTUELLER STATUS
 
-- **Kapital:** ~€9.600 | **Revenue:** €0 | **Iterationen:** Siehe `data/iterations/`
+- **Kapital:** €9,607.45 | **Revenue:** €0 | **Iterationen:** Siehe `data/iterations/` (aktuell: #7)
 - **Produkte:** TaskMaster Slack Bot (EXP-001, live auf Railway, 0 Kunden)
 - **System:** Autonomer Loop gebaut und getestet. Operator-Briefing-Kanal etabliert.
 - **Operator-Briefing:** `company-os/operator-briefing.md` — Thomas' Feedback an die Leitebene
@@ -74,10 +74,7 @@ Falls du mehr Details brauchst, lies diese Dateien:
 ```
 Lies die Datei ONBOARDING.md im Workspace. Du bist der SYSTEM ARCHITECT dieses Unternehmens.
 ```
-2. **company_state.json enthält Legacy-Felder** (`_ceo_analysis`, `_ceo_tasks`, `_cto_build_plan`) — stammen aus dem alten Orchestrator. Aufräumen wenn Zeit.
-3. **Ticket-Status in Markdown** — TICKET-002 und TICKET-003 stehen noch auf `BLOCKED` im Ticket-File, obwohl der Cycle Runner sie korrekt als READY erkennt (Dependency-Check in `ticket_parser.py`). Kann man manuell updaten oder den Parser das machen lassen.
-4. **orchestrator.py + agents/ sind LEGACY** — werden nicht mehr benutzt, aber noch nicht gelöscht.
 
 ---
 
-**Letzte Aktualisierung:** 12. Feb 2026, Cycle #8 — Company OS + Autonomer Cycle Runner gebaut, TICKET-001 autonom ausgeführt
+**Letzte Aktualisierung:** 13. Feb 2026, Iteration #7 — Dokumentation konsolidiert, Legacy-Referenzen bereinigt

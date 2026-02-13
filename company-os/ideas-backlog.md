@@ -21,8 +21,8 @@ Jede Idee hat:
 
 ## Aktive Ideen
 
-### [system | hoch | 2026-02-13] Legacy-Analyse aus Iteration #6 direkt fortsetzen
-Iteration #6 hatte vollständige, detaillierte Pläne für Core-Module Legacy-Analyse (7 konkrete Aktionen definiert), wurde aber durch Rate-Limit bei der Ausführung unterbrochen. Die Planungsarbeit ist vollständig vorhanden und kann direkt ausgeführt werden ohne neue Planung.
+### [system | hoch | 2026-02-13] Token-bewusste Legacy-Analyse durchführen
+Iteration #6 scheiterte an Token-Limits trotz perfekter Pläne. Statt 7 Aktionen auf einmal: eine kleine, token-effiziente Legacy-Analyse-Iteration durchführen. Nur 2-3 Dateien analysieren, Ergebnisse dokumentieren, dann in nächster Iteration fortsetzen.
 
 ### [system | mittel | 2026-02-12] REVERT-Funktionalität implementieren
 Das neue Evaluations-System kann REVERT empfehlen, aber der Runner loggt nur ein Warning. Git-Revert-Funktionalität für fehlerhafte Iterationen nachrüsten.
